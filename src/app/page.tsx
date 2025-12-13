@@ -514,7 +514,7 @@ export default function Home() {
             </MultilayerCardV_3>
           </motion.div>
         </div>
-        <div className="flex gap-4 mt-6 ">
+        <div className="flex gap-4 mt-6 self-start md:self-center">
           {currentStep > 0 && (
             <Button_v2
               onClick={prevStep}

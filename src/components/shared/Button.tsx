@@ -20,7 +20,7 @@ export const Button_v2 = ({
     >
       <span>{children}</span>
       <span className="absolute inset-0 flex size-full justify-center [transform:skew(-14deg)_translateX(-100%)] group-hover:duration-1000 group-hover:[transform:skew(-14deg)_translateX(100%)]">
-        <span className="relative h-full w-8 bg-white/20 bg-black/10" />
+        <span className="relative h-full w-8  bg-black/10" />
       </span>
     </Button>
   );

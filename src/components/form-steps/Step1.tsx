@@ -1,6 +1,6 @@
 import { memo } from "react";
 import { InputBlock, Input } from "@/components/shared/TextInput";
-import PasswordInput from "@/components/shared/PasswordInput";
+// import PasswordInput from "@/components/shared/PasswordInput";
 
 interface Step1Props {
   email: string;

@@ -120,7 +120,8 @@ export default function Home() {
     params.set('step', currentStep.toString());
     
     // Create a copy of formData without the base64 image
-    const { ...dataWithoutImage } = formData;
+    const { businessPicture ,...dataWithoutImage } = formData;
+    console.log(businessPicture)
     params.set('data', encodeURIComponent(JSON.stringify(dataWithoutImage)));
     
     router.replace(`?${params.toString()}`, { scroll: false });
@@ -451,7 +452,7 @@ export default function Home() {
         <div className="h-auto max-h-[90vh] w-full sm:w-[600px] drop-shadow-lg bg-black p-8 rounded-3xl overflow-y-auto">
           <MemoizedAnimatedText
             text="Hello, I am SharpChat AI"
-            className=" text-4xl"
+            className=" text-2xl sm:text-4xl"
             delay={100}
             duration={0.6}
           />
@@ -514,11 +515,12 @@ export default function Home() {
             </MultilayerCardV_3>
           </motion.div>
         </div>
-        <div className="flex gap-4 mt-6 self-start md:self-center">
+        <div className="flex gap-4 mt-6 self-start md:self-center px-10">
           {currentStep > 0 && (
             <Button_v2
               onClick={prevStep}
               className={`w-full ${currentStep === 1 ? "invisible" : ""}`}
+              variant={"ghost"}
             >
               Previous
             </Button_v2>

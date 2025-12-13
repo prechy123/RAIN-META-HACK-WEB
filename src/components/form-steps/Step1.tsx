@@ -28,12 +28,21 @@ const Step1 = memo(
         </div>
         <div>
           <p className="mb-2">Password</p>
-          <PasswordInput
+          {/* <PasswordInput
             placeholder="Enter secure password"
             value={password}
             setValue={onPasswordChange}
-            usingUseState={true}
-          />
+            // usingUseState={true}
+          /> */}
+          <InputBlock variant="neubrutalism" size="lg">
+            <Input
+              type="text"
+              placeholder="Enter secure password"
+              value={password}
+              onChange={(e) => onPasswordChange(e.target.value)}
+              className="outline-none border-none focus:outline-none focus:ring-0"
+            />
+          </InputBlock>
         </div>
         <div className="mt-4 p-4 ">
           <p className="text-sm ">

@@ -16,6 +16,8 @@ import Step4 from "@/components/form-steps/Step4";
 import Step5 from "@/components/form-steps/Step5";
 import Step6 from "@/components/form-steps/Step6";
 import { showErrorToast } from "@/libs/utils/showToast";
+import { useAuthService } from "@/services/authService";
+
 
 interface FAQ {
   question: string;
@@ -54,6 +56,7 @@ const MemoizedAnimatedText = memo(AnimatedText);
 export default function Home() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const AUTH = useAuthService()
   
   // Initialize state from URL params
   const getInitialFormData = useCallback((): BusinessData => {
@@ -74,7 +77,7 @@ export default function Home() {
           businessOpenHours: decoded.businessOpenHours || "",
           businessOpenDays: decoded.businessOpenDays || "",
           businessWebsite: decoded.businessWebsite || "",
-          businessPicture: decoded.businessPicture || "",
+          businessPicture: "", // Don't restore base64 from URL
           extra_information: decoded.extra_information || "",
           faqs: decoded.faqs || [{ question: "", answer: "" }],
           items: decoded.items || [{ name: "", price: 0, description: "" }],
@@ -115,7 +118,11 @@ export default function Home() {
   useEffect(() => {
     const params = new URLSearchParams();
     params.set('step', currentStep.toString());
-    params.set('data', encodeURIComponent(JSON.stringify(formData)));
+    
+    // Create a copy of formData without the base64 image
+    const { ...dataWithoutImage } = formData;
+    params.set('data', encodeURIComponent(JSON.stringify(dataWithoutImage)));
+    
     router.replace(`?${params.toString()}`, { scroll: false });
   }, [formData, currentStep, router]);
 
@@ -207,7 +214,7 @@ export default function Home() {
   }, [currentStep, formData]);
 
   const handleInputChange = useCallback(
-    (field: keyof BusinessData, value: any) => {
+    (field: keyof BusinessData, value: string) => {
       setFormData((prev) => ({ ...prev, [field]: value }));
     },
     []
@@ -251,10 +258,10 @@ export default function Home() {
   }, []);
 
   const updateItem = useCallback(
-    (index: number, field: keyof Item, value: any) => {
+    (index: number, field: keyof Item, value: string | number) => {
       setFormData((prev) => {
         const updatedItems = [...prev.items];
-        (updatedItems[index][field] as any) = value;
+        updatedItems[index] = { ...updatedItems[index], [field]: value };
         return { ...prev, items: updatedItems };
       });
     },
@@ -306,9 +313,14 @@ export default function Home() {
     setCurrentStep(1);
   }, []);
 
-  const handleSubmit = useCallback(() => {
-    console.log("Form Data:", formData);
-    // Submit to your API here
+  const handleSubmit = useCallback(async () => {
+    const res = await AUTH.register(formData)
+    if (res.message === "Business registered successfully") {
+      localStorage.setItem("businessData", JSON.stringify(res.business));
+
+      // Redirect to dashboard
+      router.push("/dashboard");
+    }
   }, [formData]);
 
   const renderStep = useMemo(() => {

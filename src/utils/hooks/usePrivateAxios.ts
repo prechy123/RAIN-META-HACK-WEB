@@ -2,10 +2,10 @@
 import { axiosInstance as baseAxiosInstance } from "../api/axios";
 import { AxiosInstance } from "axios";
 import { useEffect } from "react";
-import { useAuth } from "@/providers/AuthProvider";
+// import { useAuth } from "@/providers/AuthProvider";
 
 const usePrivateAxios = (instance?: AxiosInstance) => {
-  const { token } = useAuth();
+  // const { token } = useAuth();
 
 
   const axiosInstance = instance ?? baseAxiosInstance;
@@ -13,13 +13,13 @@ const usePrivateAxios = (instance?: AxiosInstance) => {
   useEffect(() => {
     const requestIntercept = axiosInstance.interceptors.request.use(
       (config) => {
-        if (token) {
-          config.headers = config.headers ?? {};
+        // if (token) {
+        //   config.headers = config.headers ?? {};
 
-          if (!config.headers["Authorization"] && token) {
-            config.headers["Authorization"] = `Bearer ${token}`;
-          }
-        }
+        //   if (!config.headers["Authorization"] && token) {
+        //     config.headers["Authorization"] = `Bearer ${token}`;
+        //   }
+        // }
         return config;
       },
       (error) => Promise.reject(error)
@@ -34,7 +34,8 @@ const usePrivateAxios = (instance?: AxiosInstance) => {
       axiosInstance.interceptors.request.eject(requestIntercept);
       axiosInstance.interceptors.response.eject(responseIntercept);
     };
-  }, [token, axiosInstance]);
+  }, [axiosInstance]);
+// }, [token, axiosInstance]);
 
   return axiosInstance;
 };

@@ -1,4 +1,4 @@
-import { authService, businessService } from "../utils/api/axios";
+import { businessService } from "../utils/api/axios";
 import useBaseService from "../utils/hooks/useBaseService";
 
 export interface RegisterBody {
@@ -100,10 +100,7 @@ export const useAuthService = () => {
     email: string;
     password: string;
   }): Promise<LoginResponse> => {
-    return await post<LoginResponse, { email: string; password: string }>(
-      "login",
-      body
-    );
+    return await post<LoginResponse, undefined>(`login?email=${body.email}&password=${body.password}`, undefined);
   };
 
   const getBusinessDetails = async (business_id: string): Promise<Business> => {

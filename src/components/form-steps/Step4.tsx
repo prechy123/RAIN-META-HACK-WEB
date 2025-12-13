@@ -124,14 +124,14 @@ const Step4 = memo(
                   </button>
                 </div>
               </div>
-              <InputBlock variant="neubrutalism" size="lg">
+              {/* <InputBlock variant="neubrutalism" size="lg">
                 <Input
                   placeholder="Or paste base64/URL here"
                   value={businessPicture}
                   onChange={(e) => onBusinessPictureChange(e.target.value)}
                   className="outline-none border-none focus:outline-none focus:ring-0 text-sm"
                 />
-              </InputBlock>
+              </InputBlock> */}
             </div>
           ) : (
             <div onClick={handleUploadClick} className="w-full cursor-pointer">

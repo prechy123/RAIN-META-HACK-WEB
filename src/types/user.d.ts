@@ -1,4 +1,3 @@
-import { EventState } from "./event";
 
 export interface IUser {
   id: string

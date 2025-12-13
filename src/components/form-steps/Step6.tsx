@@ -10,7 +10,7 @@ interface Item {
 
 interface Step6Props {
   items: Item[];
-  onUpdateItem: (index: number, field: keyof Item, value: any) => void;
+  onUpdateItem: (index: number, field: keyof Item, value: string | number) => void;
   onAddItem: () => void;
   onRemoveItem: (index: number) => void;
 }

@@ -1,17 +1,11 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { AuthState } from "../types/user";
-import Cookies from "js-cookie";
-import { googleLogout } from "@react-oauth/google";
+import { useRouter } from "next/navigation";
 
 const initialState = {
   isAuthenticated: false,
-  token: "",
-  user: {
-    email: "",
-    picture: "",
-    name: "",
-    id: "",
-  },
+  id: "",
+  business_id: "",
   setAuth: () => {},
   logout: () => {},
 };
@@ -24,70 +18,36 @@ export default function AuthProvider({
   children: React.ReactNode;
 }) {
   const [auth, setAuth] = useState<AuthState>(initialState);
+  const router = useRouter();
 
   useEffect(() => {
     async function fetchUser() {
-      const data = localStorage.getItem("moment-user");
-      if (!data) {
-        const adminData = localStorage.getItem("moment-admin");
-        if (!adminData) return;
-        const adminUser = JSON.parse(adminData);
+      // Check for business data first
+      const businessData = localStorage.getItem("businessData");
+      if (businessData) {
+        const business = JSON.parse(businessData);
         setAuth({
-          ...adminUser,
+          ...business,
           isAuthenticated: true,
           setAuth: setAuth,
-          logout: handleLogout,
+          logout: () => {},
         });
+        router.push("/dashboard");
         return;
       }
-      const user = JSON.parse(data);
-      if (user) {
-        setAuth({
-          ...user,
-          isAuthenticated: true,
-          setAuth: setAuth,
-          logout: handleLogout,
-        });
-      }
+
+      
     }
     fetchUser();
   }, []);
-
-  const handleLogout = () => {
-    try {
-      localStorage.removeItem("moment-user");
-      localStorage.removeItem("moment-admin");
-      Cookies.remove("token");
-      googleLogout();
-
-      setAuth({
-        isAuthenticated: false,
-        token: "",
-        user: {
-          email: "",
-          picture: "",
-          name: "",
-          id: "",
-        },
-        setAuth: setAuth,
-        logout: handleLogout,
-      });
-
-      window.location.href = "/login";
-    } catch (error) {
-      console.error("Logout error:", error);
-    }
-  };
 
   const value: AuthState = {
     ...auth,
     setAuth: (newAuth: AuthState): void => {
       setAuth({
         ...newAuth,
-        logout: handleLogout,
       });
     },
-    logout: handleLogout,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

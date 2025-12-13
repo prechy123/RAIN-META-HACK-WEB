@@ -4,7 +4,7 @@ import { useState, useCallback, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import AnimatedText from "@/components/AnimatedText";
 import Particles from "@/components/Particles";
-import MultilayerCardV_3 from "@/components/shared/CardLayer3";
+
 import { Button_v2 } from "@/components/shared/Button";
 import { Input, InputBlock } from "@/components/shared/TextInput";
 import PasswordInput from "@/components/shared/PasswordInput";
@@ -24,6 +24,7 @@ export default function SignIn() {
     setError("");
 
     try {
+      
       const response = await login({ email, password });
 
       // Store business data in localStorage
@@ -31,9 +32,9 @@ export default function SignIn() {
 
       // Redirect to dashboard
       router.push("/dashboard");
-    } catch (err: any) {
+    } catch (err) {
       setError(
-        err?.response?.data?.message || "Failed to sign in. Please try again."
+        "Failed to sign in. Please try again."
       );
       console.error("Sign in error:", err);
     } finally {
@@ -106,6 +107,7 @@ export default function SignIn() {
                 value={password}
                 setValue={setPassword}
                 placeholder="Enter your password"
+                usingUseState={true}
                 // disabled={isLoading}
               />
             </div>
@@ -128,7 +130,7 @@ export default function SignIn() {
 
             <div className="text-center">
               <p className="text-sm text-gray-400">
-                Don't have an account?{" "}
+                Dont have an account?{" "}
                 <Link
                   href="/"
                   className="text-blue-600 hover:text-blue-500 underline"

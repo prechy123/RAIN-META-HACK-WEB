@@ -21,7 +21,7 @@ const PasswordInput = ({
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (setValue) {
-      setValue(e.target.value as any);
+      setValue(e.target.value);
     }
   };
 
@@ -30,7 +30,7 @@ const PasswordInput = ({
       {usingUseState ? (
         setValue && (
           <Input
-            id="password"
+            // id="password"
             name={name ?? "password"}
             type={isView ? "text" : "password"}
             placeholder={placeholder ? placeholder : "Enter Password"}
@@ -42,7 +42,7 @@ const PasswordInput = ({
         )
       ) : (
         <Input
-          id="password"
+          // id="password"
           name={name ?? "password"}
           type={isView ? "text" : "password"}
           placeholder={placeholder ? placeholder : "Enter Password"}

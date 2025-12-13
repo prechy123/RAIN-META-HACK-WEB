@@ -19,7 +19,7 @@ const Step1 = memo(
           <InputBlock variant="neubrutalism" size="lg">
             <Input
               type="email"
-              placeholder="owner@lagoscafe.ng"
+              placeholder="johndoe@gmail.com"
               value={email}
               onChange={(e) => onEmailChange(e.target.value)}
               className="outline-none border-none focus:outline-none focus:ring-0"

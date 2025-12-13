@@ -4,15 +4,18 @@ import AnimatedText from "@/components/AnimatedText";
 import Particles from "../components/Particles";
 import ClickSpark from "../components/ClickSpark";
 import MultilayerCardV_3 from "@/components/shared/CardLayer3";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Button_v2 } from "@/components/shared/Button";
-import { useState, useCallback, useMemo, memo } from "react";
+import { useState, useCallback, useMemo, memo, useEffect } from "react";
+import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
 import Step1 from "@/components/form-steps/Step1";
 import Step2 from "@/components/form-steps/Step2";
 import Step3 from "@/components/form-steps/Step3";
 import Step4 from "@/components/form-steps/Step4";
 import Step5 from "@/components/form-steps/Step5";
 import Step6 from "@/components/form-steps/Step6";
+import { showErrorToast } from "@/libs/utils/showToast";
 
 interface FAQ {
   question: string;
@@ -49,27 +52,159 @@ const MemoizedParticles = memo(Particles);
 const MemoizedAnimatedText = memo(AnimatedText);
 
 export default function Home() {
-  const [currentStep, setCurrentStep] = useState(1);
-  const [formData, setFormData] = useState<BusinessData>({
-    email: "",
-    password: "",
-    businessName: "",
-    business_id: "",
-    businessDescription: "",
-    businessAddress: "",
-    businessPhone: "",
-    businessEmailAddress: "",
-    businessCategory: "",
-    businessOpenHours: "",
-    businessOpenDays: "",
-    businessWebsite: "",
-    businessPicture: "",
-    extra_information: "",
-    faqs: [{ question: "", answer: "" }],
-    items: [{ name: "", price: 0, description: "" }],
-  });
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  
+  // Initialize state from URL params
+  const getInitialFormData = useCallback((): BusinessData => {
+    const urlData = searchParams.get('data');
+    if (urlData) {
+      try {
+        const decoded = JSON.parse(decodeURIComponent(urlData));
+        return {
+          email: decoded.email || "",
+          password: decoded.password || "",
+          businessName: decoded.businessName || "",
+          business_id: decoded.business_id || "",
+          businessDescription: decoded.businessDescription || "",
+          businessAddress: decoded.businessAddress || "",
+          businessPhone: decoded.businessPhone || "",
+          businessEmailAddress: decoded.businessEmailAddress || "",
+          businessCategory: decoded.businessCategory || "",
+          businessOpenHours: decoded.businessOpenHours || "",
+          businessOpenDays: decoded.businessOpenDays || "",
+          businessWebsite: decoded.businessWebsite || "",
+          businessPicture: decoded.businessPicture || "",
+          extra_information: decoded.extra_information || "",
+          faqs: decoded.faqs || [{ question: "", answer: "" }],
+          items: decoded.items || [{ name: "", price: 0, description: "" }],
+        };
+      } catch (e) {
+        console.error("Error parsing URL data:", e);
+      }
+    }
+    return {
+      email: "",
+      password: "",
+      businessName: "",
+      business_id: "",
+      businessDescription: "",
+      businessAddress: "",
+      businessPhone: "",
+      businessEmailAddress: "",
+      businessCategory: "",
+      businessOpenHours: "",
+      businessOpenDays: "",
+      businessWebsite: "",
+      businessPicture: "",
+      extra_information: "",
+      faqs: [{ question: "", answer: "" }],
+      items: [{ name: "", price: 0, description: "" }],
+    };
+  }, [searchParams]);
+
+  const getInitialStep = useCallback((): number => {
+    const stepParam = searchParams.get('step');
+    return stepParam ? parseInt(stepParam, 10) : 1;
+  }, [searchParams]);
+
+  const [currentStep, setCurrentStep] = useState(getInitialStep);
+  const [formData, setFormData] = useState<BusinessData>(getInitialFormData);
+
+  // Update URL whenever formData or currentStep changes
+  useEffect(() => {
+    const params = new URLSearchParams();
+    params.set('step', currentStep.toString());
+    params.set('data', encodeURIComponent(JSON.stringify(formData)));
+    router.replace(`?${params.toString()}`, { scroll: false });
+  }, [formData, currentStep, router]);
 
   const totalSteps = 6;
+
+  const validateCurrentStep = useCallback((): boolean => {
+    switch (currentStep) {
+      case 1:
+        if (!formData.email) {
+          showErrorToast("Email is required");
+          return false;
+        }
+        if (!formData.password) {
+          showErrorToast("Password is required");
+          return false;
+        }
+        return true;
+
+      case 2:
+        if (!formData.businessName) {
+          showErrorToast("Business name is required");
+          return false;
+        }
+        if (!formData.businessDescription) {
+          showErrorToast("Business description is required");
+          return false;
+        }
+        if (!formData.businessCategory) {
+          showErrorToast("Business category is required");
+          return false;
+        }
+        return true;
+
+      case 3:
+        if (!formData.businessAddress) {
+          showErrorToast("Business address is required");
+          return false;
+        }
+        if (!formData.businessPhone) {
+          showErrorToast("Business phone is required");
+          return false;
+        }
+        if (!formData.businessEmailAddress) {
+          showErrorToast("Business email address is required");
+          return false;
+        }
+        if (!formData.businessWebsite) {
+          showErrorToast("Business website is required");
+          return false;
+        }
+        return true;
+
+      case 4:
+        if (!formData.businessOpenHours) {
+          showErrorToast("Business open hours are required");
+          return false;
+        }
+        if (!formData.businessOpenDays) {
+          showErrorToast("Business open days are required");
+          return false;
+        }
+        if (!formData.businessPicture) {
+          showErrorToast("Business picture is required");
+          return false;
+        }
+        if (!formData.extra_information) {
+          showErrorToast("Extra information is required");
+          return false;
+        }
+        return true;
+
+      case 5:
+        if (!formData.faqs.every((faq) => faq.question && faq.answer)) {
+          showErrorToast("All FAQs must have a question and an answer");
+          return false;
+        }
+        return true;
+
+      case 6:
+        if (!formData.items.every((item) => item.name && item.price > 0)) {
+          showErrorToast("All items must have a name and a price greater than 0");
+          return false;
+        }
+        return true;
+
+      default:
+        return true;
+    }
+  }, [currentStep, formData]);
 
   const handleInputChange = useCallback(
     (field: keyof BusinessData, value: any) => {
@@ -139,12 +274,37 @@ export default function Home() {
   );
 
   const nextStep = useCallback(() => {
-    if (currentStep < totalSteps) setCurrentStep(currentStep + 1);
-  }, [currentStep, totalSteps]);
+    if (currentStep < totalSteps && validateCurrentStep()) {
+      setCurrentStep(currentStep + 1);
+    }
+  }, [currentStep, totalSteps, validateCurrentStep]);
 
   const prevStep = useCallback(() => {
     if (currentStep > 1) setCurrentStep(currentStep - 1);
   }, [currentStep]);
+
+  const startOver = useCallback(() => {
+    const resetData: BusinessData = {
+      email: "",
+      password: "",
+      businessName: "",
+      business_id: "",
+      businessDescription: "",
+      businessAddress: "",
+      businessPhone: "",
+      businessEmailAddress: "",
+      businessCategory: "",
+      businessOpenHours: "",
+      businessOpenDays: "",
+      businessWebsite: "",
+      businessPicture: "",
+      extra_information: "",
+      faqs: [{ question: "", answer: "" }],
+      items: [{ name: "", price: 0, description: "" }],
+    };
+    setFormData(resetData);
+    setCurrentStep(1);
+  }, []);
 
   const handleSubmit = useCallback(() => {
     console.log("Form Data:", formData);
@@ -289,7 +449,23 @@ export default function Home() {
             delay={100}
             duration={0.6}
           />
-
+          {currentStep === 1 && (
+            <div className="mt-4 flex justify-between items-center">
+              <Link href="/signin" className="text-blue-500 hover:underline">
+                Already have an account? Sign in
+              </Link>
+            </div>
+          )}
+          {currentStep > 1 && (
+            <div className="mt-4 text-right">
+              <button
+                onClick={startOver}
+                className="text-red-500 hover:underline text-sm cursor-pointer"
+              >
+                Start Over
+              </button>
+            </div>
+          )}
           <div className="mt-4 mb-6">
             <div className="flex justify-between items-center">
               <p className="text-sm text-gray-400">
@@ -311,12 +487,22 @@ export default function Home() {
                 sparkCount={8}
                 duration={400}
               >
-                {renderStep}
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={currentStep}
+                    initial={{ opacity: 0, x: 50 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -50 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    {renderStep}
+                  </motion.div>
+                </AnimatePresence>
               </ClickSpark>
             </MultilayerCardV_3>
           </motion.div>
         </div>
-        <div className="flex gap-4 mt-6">
+        <div className="flex gap-4 mt-6 ">
           {currentStep > 0 && (
             <Button_v2
               onClick={prevStep}

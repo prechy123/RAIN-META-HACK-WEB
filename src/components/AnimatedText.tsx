@@ -1,5 +1,6 @@
 "use client";
 
+import { memo } from "react";
 import SplitText from "./SplitText";
 
 interface AnimatedTextProps {
@@ -9,7 +10,7 @@ interface AnimatedTextProps {
   className?: string;
 }
 
-export default function AnimatedText({
+function AnimatedText({
   text,
   delay = 100,
   duration = 0.6,
@@ -34,3 +35,5 @@ export default function AnimatedText({
     </div>
   );
 }
+
+export default memo(AnimatedText);

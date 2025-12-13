@@ -18,13 +18,13 @@ const PasswordInput = ({
   usingUseState?: boolean;
 }) => {
   const [isView, setIsView] = useState(false);
-  
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (setValue) {
       setValue(e.target.value as any);
     }
   };
-  
+
   return (
     <div className=" relative">
       {usingUseState ? (
@@ -67,4 +67,4 @@ const PasswordInput = ({
   );
 };
 
-export default PasswordInput;
+export default React.memo(PasswordInput);

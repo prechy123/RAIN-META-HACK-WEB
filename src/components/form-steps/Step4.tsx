@@ -145,7 +145,7 @@ const Step4 = memo(
                 </p>
                 <p className="text-xs text-gray-500">PNG, JPG, GIF up to 5MB</p>
               </div>
-              <InputBlock variant="neubrutalism" size="lg" className="mt-3">
+              {/* <InputBlock variant="neubrutalism" size="lg" className="mt-3">
                 <Input
                   placeholder="Or paste base64/URL here"
                   value={businessPicture}
@@ -153,7 +153,7 @@ const Step4 = memo(
                   onClick={(e) => e.stopPropagation()}
                   className="outline-none border-none focus:outline-none focus:ring-0"
                 />
-              </InputBlock>
+              </InputBlock> */}
             </div>
           )}
         </div>

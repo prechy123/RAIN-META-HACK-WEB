@@ -49,7 +49,7 @@ const Step6 = memo(
               </InputBlock>
             </div>
             <div>
-              <p className="mb-2">Description (Optional)</p>
+              <p className="mb-2">Description</p>
               <InputBlock variant="neubrutalism" size="lg">
                 <Input
                   placeholder="Signature party jollof rice served with well-seasoned grilled chicken..."

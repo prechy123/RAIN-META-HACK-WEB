@@ -87,7 +87,7 @@ const Step4 = memo(
             />
           </InputBlock>
         </div>
-        <div>
+        {/* <div>
           <p className="mb-2">Business Picture</p>
           <input
             ref={fileInputRef}
@@ -100,63 +100,46 @@ const Step4 = memo(
           {businessPicture ? (
             <div className="space-y-3">
               <div className="relative w-full max-w-md mx-auto">
-                <img
-                  src={businessPicture}
-                  alt="Business preview"
-                  className="w-full h-64 object-cover rounded-lg border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
-                />
-                <div className="absolute top-2 right-2 flex gap-2">
-                  <button
-                    type="button"
-                    onClick={handleUploadClick}
-                    className="bg-white p-2 rounded-lg border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
-                    title="Change image"
-                  >
-                    <Edit2 className="w-4 h-4" />
-                  </button>
-                  <button
-                    type="button"
-                    onClick={handleRemoveImage}
-                    className="bg-red-500 text-white p-2 rounded-lg border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
-                    title="Remove image"
-                  >
-                    <X className="w-4 h-4" />
-                  </button>
-                </div>
+          <img
+            src={businessPicture}
+            alt="Business preview"
+            className="w-full h-64 object-cover rounded-lg border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
+          />
+          <div className="absolute top-2 right-2 flex gap-2">
+            <button
+              type="button"
+              onClick={handleUploadClick}
+              className="bg-white p-2 rounded-lg border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
+              title="Change image"
+            >
+              <Edit2 className="w-4 h-4" />
+            </button>
+            <button
+              type="button"
+              onClick={handleRemoveImage}
+              className="bg-red-500 text-white p-2 rounded-lg border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
+              title="Remove image"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </div>
               </div>
-              {/* <InputBlock variant="neubrutalism" size="lg">
-                <Input
-                  placeholder="Or paste base64/URL here"
-                  value={businessPicture}
-                  onChange={(e) => onBusinessPictureChange(e.target.value)}
-                  className="outline-none border-none focus:outline-none focus:ring-0 text-sm"
-                />
-              </InputBlock> */}
             </div>
           ) : (
             <div onClick={handleUploadClick} className="w-full cursor-pointer">
               <div className="border-4 border-dashed border-black rounded-lg p-8 text-center transition-colors">
-                <Upload className="w-12 h-12 mx-auto mb-4" />
-                <p className="text-lg font-semibold mb-2">
-                  Upload Business Picture
-                </p>
-                <p className="text-sm text-gray-600 mb-2">
-                  Click to upload or drag and drop
-                </p>
-                <p className="text-xs text-gray-500">PNG, JPG, GIF up to 5MB</p>
+          <Upload className="w-12 h-12 mx-auto mb-4" />
+          <p className="text-lg font-semibold mb-2">
+            Upload Business Picture
+          </p>
+          <p className="text-sm text-gray-600 mb-2">
+            Click to upload or drag and drop
+          </p>
+          <p className="text-xs text-gray-500">PNG, JPG, GIF up to 5MB</p>
               </div>
-              {/* <InputBlock variant="neubrutalism" size="lg" className="mt-3">
-                <Input
-                  placeholder="Or paste base64/URL here"
-                  value={businessPicture}
-                  onChange={(e) => onBusinessPictureChange(e.target.value)}
-                  onClick={(e) => e.stopPropagation()}
-                  className="outline-none border-none focus:outline-none focus:ring-0"
-                />
-              </InputBlock> */}
             </div>
           )}
-        </div>
+        </div> */}
         <div>
           <p className="mb-2">Extra Information</p>
           <InputBlock variant="neubrutalism" size="lg">

@@ -14,11 +14,12 @@ const usePrivateAxios = (instance?: AxiosInstance) => {
     const requestIntercept = axiosInstance.interceptors.request.use(
       (config) => {
         // if (token) {
-        //   config.headers = config.headers ?? {};
+          config.headers = config.headers ?? {};
 
-        //   if (!config.headers["Authorization"] && token) {
-        //     config.headers["Authorization"] = `Bearer ${token}`;
-        //   }
+          // if (!config.headers["Authorization"]) {
+            
+          // }
+          config.headers["api-key-header"] = `BH8ebZqeqrUehYIFnIubWciuNAmqS/uZ9RetIObuAoU=`;
         // }
         return config;
       },

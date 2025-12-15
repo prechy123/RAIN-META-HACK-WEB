@@ -18,7 +18,6 @@ import Step6 from "@/components/form-steps/Step6";
 import { showErrorToast } from "@/libs/utils/showToast";
 import { useAuthService } from "@/services/authService";
 
-
 interface FAQ {
   question: string;
   answer: string;
@@ -56,11 +55,12 @@ const MemoizedAnimatedText = memo(AnimatedText);
 export default function Home() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const AUTH = useAuthService()
-  
+  const AUTH = useAuthService();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   // Initialize state from URL params
   const getInitialFormData = useCallback((): BusinessData => {
-    const urlData = searchParams.get('data');
+    const urlData = searchParams.get("data");
     if (urlData) {
       try {
         const decoded = JSON.parse(decodeURIComponent(urlData));
@@ -107,7 +107,7 @@ export default function Home() {
   }, [searchParams]);
 
   const getInitialStep = useCallback((): number => {
-    const stepParam = searchParams.get('step');
+    const stepParam = searchParams.get("step");
     return stepParam ? parseInt(stepParam, 10) : 1;
   }, [searchParams]);
 
@@ -117,13 +117,13 @@ export default function Home() {
   // Update URL whenever formData or currentStep changes
   useEffect(() => {
     const params = new URLSearchParams();
-    params.set('step', currentStep.toString());
-    
+    params.set("step", currentStep.toString());
+
     // Create a copy of formData without the base64 image
-    const { businessPicture ,...dataWithoutImage } = formData;
-    console.log(businessPicture)
-    params.set('data', encodeURIComponent(JSON.stringify(dataWithoutImage)));
-    
+    const { businessPicture, ...dataWithoutImage } = formData;
+    console.log(businessPicture);
+    params.set("data", encodeURIComponent(JSON.stringify(dataWithoutImage)));
+
     router.replace(`?${params.toString()}`, { scroll: false });
   }, [formData, currentStep, router]);
 
@@ -136,8 +136,18 @@ export default function Home() {
           showErrorToast("Email is required");
           return false;
         }
+        // Email validation regex
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(formData.email)) {
+          showErrorToast("Please enter a valid email address");
+          return false;
+        }
         if (!formData.password) {
           showErrorToast("Password is required");
+          return false;
+        }
+        if (formData.password.length < 6) {
+          showErrorToast("Password must be at least 6 characters long");
           return false;
         }
         return true;
@@ -166,14 +176,32 @@ export default function Home() {
           showErrorToast("Business phone is required");
           return false;
         }
+        // Phone validation (basic)
+        const phoneRegex = /^[\d\s\-\+\(\)]+$/;
+        if (!phoneRegex.test(formData.businessPhone)) {
+          showErrorToast("Please enter a valid phone number");
+          return false;
+        }
         if (!formData.businessEmailAddress) {
           showErrorToast("Business email address is required");
           return false;
         }
+        // Validate business email
+        // const businessEmailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        // if (!businessEmailRegex.test(formData.businessEmailAddress)) {
+        //   showErrorToast("Please enter a valid business email address");
+        //   return false;
+        // }
         if (!formData.businessWebsite) {
           showErrorToast("Business website is required");
           return false;
         }
+        // URL validation (basic)
+        // const urlRegex = /^(https?:\/\/)?([\w\-]+\.)+[\w\-]+(\/[\w\-._~:/?#[\]@!$&'()*+,;=]*)?$/;
+        // if (!urlRegex.test(formData.businessWebsite)) {
+        //   showErrorToast("Please enter a valid website URL");
+        //   return false;
+        // }
         return true;
 
       case 4:
@@ -185,10 +213,10 @@ export default function Home() {
           showErrorToast("Business open days are required");
           return false;
         }
-        if (!formData.businessPicture) {
-          showErrorToast("Business picture is required");
-          return false;
-        }
+        // if (!formData.businessPicture) {
+        //   showErrorToast("Business picture is required");
+        //   return false;
+        // }
         if (!formData.extra_information) {
           showErrorToast("Extra information is required");
           return false;
@@ -204,7 +232,9 @@ export default function Home() {
 
       case 6:
         if (!formData.items.every((item) => item.name && item.price > 0)) {
-          showErrorToast("All items must have a name and a price greater than 0");
+          showErrorToast(
+            "All items must have a name and a price greater than 0"
+          );
           return false;
         }
         return true;
@@ -315,12 +345,18 @@ export default function Home() {
   }, []);
 
   const handleSubmit = useCallback(async () => {
-    const res = await AUTH.register(formData)
-    if (res.message === "Business registered successfully") {
-      localStorage.setItem("businessData", JSON.stringify(res.business));
+    try {
+      setIsSubmitting(true);
+      const res = await AUTH.register(formData);
+      if (res.message === "Business registered successfully") {
+        localStorage.setItem("businessData", JSON.stringify(res.business));
 
-      // Redirect to dashboard
-      router.push("/dashboard");
+        // Redirect to dashboard
+        router.push("/dashboard");
+      }
+    } catch {
+    } finally {
+      setIsSubmitting(false);
     }
   }, [formData]);
 
@@ -530,8 +566,12 @@ export default function Home() {
               Next
             </Button_v2>
           ) : (
-            <Button_v2 onClick={handleSubmit} className="w-full">
-              Submit
+            <Button_v2
+              onClick={handleSubmit}
+              className="w-full"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? "Submitting..." : "Submit"}
             </Button_v2>
           )}
         </div>

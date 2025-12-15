@@ -89,6 +89,7 @@ export interface FAQ {
   answer: string;
 }
 
+
 export const useAuthService = () => {
   const { post, get, put } = useBaseService("", businessService, true);
 

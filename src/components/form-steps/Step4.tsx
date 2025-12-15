@@ -1,6 +1,6 @@
-import { memo, useRef, ChangeEvent } from "react";
+import { memo} from "react";
 import { InputBlock, Input } from "@/components/shared/TextInput";
-import { Upload, X, Edit2 } from "lucide-react";
+// import { Upload, X, Edit2 } from "lucide-react";
 
 interface Step4Props {
   businessOpenHours: string;
@@ -17,50 +17,50 @@ const Step4 = memo(
   ({
     businessOpenHours,
     businessOpenDays,
-    businessPicture,
+    // businessPicture,
     extra_information,
     onBusinessOpenHoursChange,
     onBusinessOpenDaysChange,
-    onBusinessPictureChange,
+    // onBusinessPictureChange,
     onExtraInformationChange,
   }: Step4Props) => {
-    const fileInputRef = useRef<HTMLInputElement>(null);
+    // const fileInputRef = useRef<HTMLInputElement>(null);
 
-    const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
-      const file = e.target.files?.[0];
-      if (file) {
-        // Validate file type
-        if (!file.type.startsWith("image/")) {
-          alert("Please select a valid image file");
-          return;
-        }
+    // const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    //   const file = e.target.files?.[0];
+    //   if (file) {
+    //     // Validate file type
+    //     if (!file.type.startsWith("image/")) {
+    //       alert("Please select a valid image file");
+    //       return;
+    //     }
 
-        // Validate file size (max 5MB)
-        if (file.size > 5 * 1024 * 1024) {
-          alert("Image size should be less than 5MB");
-          return;
-        }
+    //     // Validate file size (max 5MB)
+    //     if (file.size > 5 * 1024 * 1024) {
+    //       alert("Image size should be less than 5MB");
+    //       return;
+    //     }
 
-        // Convert to base64
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          const base64String = reader.result as string;
-          onBusinessPictureChange(base64String);
-        };
-        reader.readAsDataURL(file);
-      }
-    };
+    //     // Convert to base64
+    //     const reader = new FileReader();
+    //     reader.onloadend = () => {
+    //       const base64String = reader.result as string;
+    //       onBusinessPictureChange(base64String);
+    //     };
+    //     reader.readAsDataURL(file);
+    //   }
+    // };
 
-    const handleUploadClick = () => {
-      fileInputRef.current?.click();
-    };
+    // const handleUploadClick = () => {
+    //   fileInputRef.current?.click();
+    // };
 
-    const handleRemoveImage = () => {
-      onBusinessPictureChange("");
-      if (fileInputRef.current) {
-        fileInputRef.current.value = "";
-      }
-    };
+    // const handleRemoveImage = () => {
+    //   onBusinessPictureChange("");
+    //   if (fileInputRef.current) {
+    //     fileInputRef.current.value = "";
+    //   }
+    // };
 
     return (
       <div className="space-y-4">

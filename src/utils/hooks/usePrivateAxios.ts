@@ -19,7 +19,7 @@ const usePrivateAxios = (instance?: AxiosInstance) => {
           // if (!config.headers["Authorization"]) {
             
           // }
-          config.headers["api-key-header"] = `BH8ebZqeqrUehYIFnIubWciuNAmqS/uZ9RetIObuAoU=`;
+          config.headers["api-key-header"] = process.env.NEXT_PUBLIC_API_KEY;
         // }
         return config;
       },

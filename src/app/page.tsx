@@ -485,7 +485,7 @@ export default function Home() {
   return (
     <div className="relative flex items-center justify-center h-screen overflow-hidden z-10">
       <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center z-20 flex-col">
-        <div className="h-auto max-h-[90vh] w-full sm:w-[600px] drop-shadow-lg bg-black p-8 rounded-3xl overflow-y-auto">
+        <div className="h-auto max-h-[90vh] w-full sm:w-[600px] drop-shadow-lg bg-black p-8 rounded-3xl overflow-y-auto scrollbar-hide">
           <MemoizedAnimatedText
             text="Hello, I am SharpChat AI"
             className=" text-2xl sm:text-4xl"

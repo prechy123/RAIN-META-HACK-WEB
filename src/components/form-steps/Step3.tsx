@@ -27,7 +27,7 @@ const Step3 = memo(
       <div className="space-y-4">
         <h3 className="text-xl font-semibold mb-4">Contact Details</h3>
         <div>
-          <p className="mb-2">Business Address (YardCode)</p>
+          <p className="mb-2">Business Address or YardCode</p>
           <InputBlock variant="neubrutalism" size="lg">
             <Input
               placeholder="YardCode - GQ9 U88(BABA) or 20 oba adesida, ibadan"

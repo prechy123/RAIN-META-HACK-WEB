@@ -27,10 +27,10 @@ const Step3 = memo(
       <div className="space-y-4">
         <h3 className="text-xl font-semibold mb-4">Contact Details</h3>
         <div>
-          <p className="mb-2">Business Address</p>
+          <p className="mb-2">Business Address (YardCode)</p>
           <InputBlock variant="neubrutalism" size="lg">
             <Input
-              placeholder="15 Admiralty Way, Lekki Phase 1, Lagos"
+              placeholder="YardCode - GQ9 U88(BABA) or 20 oba adesida, ibadan"
               value={businessAddress}
               onChange={(e) => onBusinessAddressChange(e.target.value)}
               className="outline-none border-none focus:outline-none focus:ring-0"

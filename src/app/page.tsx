@@ -169,7 +169,7 @@ export default function Home() {
 
       case 3:
         if (!formData.businessAddress) {
-          showErrorToast("Business address is required");
+          showErrorToast("Business address or YardCode is required");
           return false;
         }
         if (!formData.businessPhone) {

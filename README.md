@@ -1,10 +1,39 @@
-# Rain Meta Hack - Business Management Platform
+# Rain Meta Hack - SharpChat AI
 
-A modern web application for business registration, management, and customer interaction built with Next.js 14, TypeScript, and TailwindCSS.
+An intelligent, AI-powered Customer Relationship Management (CRM) solution designed to automate customer interactions for local businesses through WhatsApp, built with Next.js 14, TypeScript, and TailwindCSS.
+
+## Overview
+
+SharpChat AI revolutionizes how local businesses interact with customers by combining WhatsApp integration with AI-powered automation. Using **Llama 3.3 70B Versatile**, we built an AI agent that seamlessly integrates with the WhatsApp platform, allowing customers to interact with businesses through natural language conversations.
+
+### For Customers
+Customers simply chat with the SharpChat AI WhatsApp number, search for a business by name or unique ID, and ask questions related to the business, such as:
+- Services offered
+- Item prices
+- Operating hours
+- Location and contact information
+- Frequently asked questions
+
+The AI agent retrieves accurate, business-specific information and provides instant responses, ensuring a smooth and efficient customer experience with 24/7 availability.
+
+### For Business Owners
+SharpChat AI provides a web-based dashboard where business owners can easily sign up and manage their business profile. Business owners register once and can upload or update their business details at any time, including descriptions, items sold, prices, FAQs, images, and location.
+
+**NEW: AI-Assisted Auto-Fill** - To make registration even easier, SharpChat AI now features an intelligent auto-fill system powered by AI. Business owners can:
+- **Upload documents** (TXT, DOC, DOCX) containing business information
+- **Enter a website URL** to automatically extract business details
+- **Describe their business** in natural language, and let AI structure the information
+
+The AI automatically extracts and populates all relevant fields including business name, description, contact details, operating hours, menu items, prices, and FAQs - saving time and simplifying the onboarding process. This centralized information powers the AI agent, enabling consistent, 24/7 customer support without requiring the business owner to be constantly online.
 
 ## Features
 
 ### Business Registration & Authentication
+- **AI-Assisted Auto-Fill**: Revolutionary feature that extracts business information from:
+  - Website URLs
+  - Text documents (TXT, DOC, DOCX)
+  - Natural language descriptions
+  - Powered by Llama 3.3 70B Versatile for accurate data extraction
 - **Multi-step Registration**: Guided business onboarding with 6 steps
   - Basic information (name, category, description)
   - Contact details (address, phone, email)
@@ -200,4 +229,3 @@ This project is licensed under the MIT License.
 ## Support
 
 For support, email support@rainmetahack.com or open an issue in the repository.
-```

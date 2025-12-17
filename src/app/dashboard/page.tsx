@@ -76,7 +76,7 @@ export default function Dashboard() {
           <div className="flex gap-2">
             <Button_v2
               className="whitespace-nowrap"
-              onClick={() => showErrorToast("coming soon!")}
+              onClick={() => router.push(`/dashboard/edit/${businessData.business_id}`)}
             >
               Edit
             </Button_v2>
@@ -203,7 +203,7 @@ export default function Dashboard() {
         </motion.div>
 
         {/* Business Picture */}
-        {businessData.businessPicture && (
+        {/* {businessData.businessPicture && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -221,7 +221,7 @@ export default function Dashboard() {
               />
             </div>
           </motion.div>
-        )}
+        )} */}
 
         {/* FAQs */}
         {businessData.faqs && businessData.faqs.length > 0 && (

@@ -89,7 +89,6 @@ export interface FAQ {
   answer: string;
 }
 
-
 export const useAuthService = () => {
   const { post, get, put } = useBaseService("", businessService, true);
 
@@ -101,16 +100,31 @@ export const useAuthService = () => {
     email: string;
     password: string;
   }): Promise<LoginResponse> => {
-    return await post<LoginResponse, undefined>(`login?email=${body.email}&password=${body.password}`, undefined);
+    return await post<LoginResponse, undefined>(
+      `login?email=${body.email}&password=${body.password}`,
+      undefined
+    );
   };
 
   const getBusinessDetails = async (business_id: string): Promise<Business> => {
     return await get<Business>(`${business_id}`);
-  }
+  };
 
-  const updateBusinessDetails = async (business_id: string, body: Partial<Business>): Promise<Business> => {
-    return await put<Business, Partial<Business>>(`${business_id}`, body);
-  }
+  const updateBusinessDetails = async (
+    business_id: string,
+    body: Partial<Business>
+  ): Promise<{
+    message: string;
+    business: Business;
+  }> => {
+    return await put<
+      {
+        message: string;
+        business: Business;
+      },
+      Partial<Business>
+    >(`${business_id}`, body);
+  };
 
   return { register, login, getBusinessDetails, updateBusinessDetails };
 };

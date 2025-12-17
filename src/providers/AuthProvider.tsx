@@ -23,18 +23,18 @@ export default function AuthProvider({
   useEffect(() => {
     async function fetchUser() {
       // Check for business data first
-      const businessData = localStorage.getItem("businessData");
-      if (businessData) {
-        const business = JSON.parse(businessData);
-        setAuth({
-          ...business,
-          isAuthenticated: true,
-          setAuth: setAuth,
-          logout: () => {},
-        });
-        router.push("/dashboard");
-        return;
-      }
+      // const businessData = localStorage.getItem("businessData");
+      // if (businessData) {
+      //   const business = JSON.parse(businessData);
+      //   setAuth({
+      //     ...business,
+      //     isAuthenticated: true,
+      //     setAuth: setAuth,
+      //     logout: () => {},
+      //   });
+      //   router.push("/dashboard");
+      //   return;
+      // }
 
       
     }

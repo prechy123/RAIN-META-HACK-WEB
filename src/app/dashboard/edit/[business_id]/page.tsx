@@ -7,15 +7,14 @@ import MultilayerCardV_3 from "@/components/shared/CardLayer3";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button_v2 } from "@/components/shared/Button";
 import { useState, useCallback, useMemo, memo, useEffect } from "react";
-import Link from "next/link";
-import { useParams, useRouter, useSearchParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import Step2 from "@/components/form-steps/Step2";
 import Step3 from "@/components/form-steps/Step3";
 import Step4 from "@/components/form-steps/Step4";
 import Step5 from "@/components/form-steps/Step5";
 import Step6 from "@/components/form-steps/Step6";
-import { showErrorToast, showSuccessToast } from "@/libs/utils/showToast";
-import { Business, useAuthService } from "@/services/authService";
+import { showErrorToast } from "@/libs/utils/showToast";
+import { useAuthService } from "@/services/authService";
 
 interface FAQ {
   question: string;
@@ -51,7 +50,7 @@ const MemoizedAnimatedText = memo(AnimatedText);
 
 export default function Home() {
   const router = useRouter();
-  const searchParams = useSearchParams();
+  // const searchParams = useSearchParams();
   const AUTH = useAuthService();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const params = useParams();

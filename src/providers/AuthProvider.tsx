@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { AuthState } from "../types/user";
-import { useRouter } from "next/navigation";
+// import { useRouter } from "next/navigation";
 
 const initialState = {
   isAuthenticated: false,
@@ -18,7 +18,7 @@ export default function AuthProvider({
   children: React.ReactNode;
 }) {
   const [auth, setAuth] = useState<AuthState>(initialState);
-  const router = useRouter();
+  // const router = useRouter();
 
   useEffect(() => {
     async function fetchUser() {

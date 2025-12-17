@@ -68,7 +68,7 @@ Return ONLY valid JSON, no additional text or explanation.`;
         content.includes("data:application/pdf")
       ) {
         // Extract file type
-        const fileType = fileName?.split(".").pop()?.toLowerCase() || "unknown";
+        // const fileType = fileName?.split(".").pop()?.toLowerCase() || "unknown";
 
         // For images and PDFs, we can't process them directly with text models
         // Instead, we'll use a fallback approach

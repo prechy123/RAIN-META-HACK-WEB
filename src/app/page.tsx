@@ -15,8 +15,10 @@ import Step3 from "@/components/form-steps/Step3";
 import Step4 from "@/components/form-steps/Step4";
 import Step5 from "@/components/form-steps/Step5";
 import Step6 from "@/components/form-steps/Step6";
-import { showErrorToast } from "@/libs/utils/showToast";
+import { showErrorToast, showSuccessToast } from "@/libs/utils/showToast";
 import { useAuthService } from "@/services/authService";
+import AutoFillModal from "@/components/AutoFillModal";
+import { Sparkles } from "lucide-react";
 
 interface FAQ {
   question: string;
@@ -113,6 +115,42 @@ export default function Home() {
 
   const [currentStep, setCurrentStep] = useState(getInitialStep);
   const [formData, setFormData] = useState<BusinessData>(getInitialFormData);
+  const [isAutoFillModalOpen, setIsAutoFillModalOpen] = useState(false);
+
+  // Handle auto-fill data extraction
+  const handleAutoFillData = useCallback(
+    (extractedData: Partial<BusinessData>) => {
+      setFormData((prev) => ({
+        ...prev,
+        businessName: extractedData.businessName || prev.businessName,
+        businessDescription:
+          extractedData.businessDescription || prev.businessDescription,
+        businessAddress: extractedData.businessAddress || prev.businessAddress,
+        businessPhone: extractedData.businessPhone || prev.businessPhone,
+        businessEmailAddress:
+          extractedData.businessEmailAddress || prev.businessEmailAddress,
+        businessCategory:
+          extractedData.businessCategory || prev.businessCategory,
+        businessOpenHours:
+          extractedData.businessOpenHours || prev.businessOpenHours,
+        businessOpenDays:
+          extractedData.businessOpenDays || prev.businessOpenDays,
+        businessWebsite: extractedData.businessWebsite || prev.businessWebsite,
+        extra_information:
+          extractedData.extra_information || prev.extra_information,
+        faqs:
+          extractedData.faqs && extractedData.faqs.length > 0
+            ? extractedData.faqs
+            : prev.faqs,
+        items:
+          extractedData.items && extractedData.items.length > 0
+            ? extractedData.items
+            : prev.items,
+      }));
+      showSuccessToast("Business information extracted successfully!");
+    },
+    []
+  );
 
   // Update URL whenever formData or currentStep changes
   useEffect(() => {
@@ -505,6 +543,20 @@ export default function Home() {
               </Link>
             </div>
           )}
+          {currentStep === 1 && (
+            <div className="mt-4">
+              <button
+                onClick={() => setIsAutoFillModalOpen(true)}
+                className="w-full flex items-center justify-center gap-2 py-3 px-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl"
+              >
+                <Sparkles className="w-5 h-5" />
+                <span>Auto-Fill with AI</span>
+              </button>
+              <p className="text-xs text-gray-400 text-center mt-2">
+                Upload documents, provide a URL, or describe your business
+              </p>
+            </div>
+          )}
           {currentStep > 1 && (
             <div className="mt-4 text-right">
               <button
@@ -587,6 +639,13 @@ export default function Home() {
         moveParticlesOnHover={true}
         alphaParticles={false}
         disableRotation={false}
+      />
+
+      {/* Auto-fill Modal */}
+      <AutoFillModal
+        isOpen={isAutoFillModalOpen}
+        onClose={() => setIsAutoFillModalOpen(false)}
+        onDataExtracted={handleAutoFillData}
       />
     </div>
   );

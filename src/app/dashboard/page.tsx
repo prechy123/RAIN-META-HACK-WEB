@@ -275,7 +275,7 @@ export default function Dashboard() {
                       {item.name}
                     </h3>
                     <p className="text-blue-400 font-semibold mb-2">
-                      ₦ {item.price.toFixed(2)}
+                      ₦ {item.price}
                     </p>
                     {item.description && (
                       <p className="text-gray-300 text-sm break-words">

@@ -39,7 +39,28 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} ${poppins.variable}`}>
       <head>
-        <title>RAIN HACK PROJECT</title>
+        {/* SEO Meta Tags */}
+          <meta name="description" content="AlatChat - AI-powered chat assistant for intelligent conversations and real-time assistance" />
+          <meta name="keywords" content="AlatChat, AI chat, chat assistant, artificial intelligence, conversational AI" />
+          <meta name="author" content="AlatChat" />
+          <link rel="canonical" href="https://alatchat.com" />
+          
+          {/* Open Graph / Facebook */}
+          <meta property="og:type" content="website" />
+          <meta property="og:url" content="https://alatchat.com" />
+          <meta property="og:title" content="AlatChat - AI-Powered Chat Assistant" />
+          <meta property="og:description" content="Experience intelligent conversations with AlatChat's AI-powered chat assistant" />
+          
+          {/* Twitter */}
+          <meta name="twitter:card" content="summary_large_image" />
+          <meta name="twitter:url" content="https://alatchat.com" />
+          <meta name="twitter:title" content="AlatChat - AI-Powered Chat Assistant" />
+          <meta name="twitter:description" content="Experience intelligent conversations with AlatChat's AI-powered chat assistant" />
+          
+          {/* Additional SEO */}
+          <meta name="robots" content="index, follow" />
+          <meta name="language" content="English" />
+        <title>AlatChat</title>
       </head>
 
       <body

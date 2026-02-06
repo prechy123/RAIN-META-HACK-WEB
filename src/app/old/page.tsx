@@ -1,20 +1,25 @@
 "use client";
 
 import AnimatedText from "@/components/AnimatedText";
-import Particles from "../../../../components/Particles";
-import ClickSpark from "../../../../components/ClickSpark";
+import Particles from "../../components/Particles";
+import ClickSpark from "../../components/ClickSpark";
 import MultilayerCardV_3 from "@/components/shared/CardLayer3";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button_v2 } from "@/components/shared/Button";
 import { useState, useCallback, useMemo, memo, useEffect } from "react";
-import { useParams, useRouter } from "next/navigation";
+import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
+import Step1 from "@/components/form-steps/Step1";
 import Step2 from "@/components/form-steps/Step2";
 import Step3 from "@/components/form-steps/Step3";
 import Step4 from "@/components/form-steps/Step4";
 import Step5 from "@/components/form-steps/Step5";
 import Step6 from "@/components/form-steps/Step6";
-import { showErrorToast } from "@/libs/utils/showToast";
+import { showErrorToast, showSuccessToast } from "@/libs/utils/showToast";
 import { useAuthService } from "@/services/authService";
+import AutoFillModal from "@/components/AutoFillModal";
+import { Sparkles } from "lucide-react";
+import { useAuth } from "@/providers/AuthProvider";
 
 interface FAQ {
   question: string;
@@ -28,6 +33,8 @@ interface Item {
 }
 
 interface BusinessData {
+  email: string;
+  password: string;
   businessName: string;
   business_id: string;
   businessDescription: string;
@@ -50,46 +57,141 @@ const MemoizedAnimatedText = memo(AnimatedText);
 
 export default function Home() {
   const router = useRouter();
-  // const searchParams = useSearchParams();
+  const searchParams = useSearchParams();
   const AUTH = useAuthService();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const params = useParams();
-  const business_id = params.business_id as string;
+  const { setAuth } = useAuth();
 
-  const [currentStep, setCurrentStep] = useState(2);
-  const [formData, setFormData] = useState<BusinessData | null>(null);
-
-  useEffect(() => {
-    const storedData = localStorage.getItem("businessData");
-    if (storedData) {
-      const parsedData = JSON.parse(storedData);
-      console.log({ parsedData });
-      setFormData({
-        businessName: parsedData.businessName,
-        business_id: parsedData.business_id || "",
-        businessDescription: parsedData.businessDescription || "",
-        businessAddress: parsedData.businessAddress || "",
-        businessPhone: parsedData.businessPhone || "",
-        businessEmailAddress: parsedData.businessEmailAddress || "",
-        businessCategory: parsedData.businessCategory || "",
-        businessOpenHours: parsedData.businessOpenHours || "",
-        businessOpenDays: parsedData.businessOpenDays || "",
-        businessWebsite: parsedData.businessWebsite || "",
-        businessPicture: "",
-        extra_information: parsedData.extra_information || "",
-        faqs: parsedData.faqs || [{ question: "", answer: "" }],
-        items: parsedData.items || [{ name: "", price: 0, description: "" }],
-      });
-    } else {
-      router.push("/signin");
+  // Initialize state from URL params
+  const getInitialFormData = useCallback((): BusinessData => {
+    const urlData = searchParams.get("data");
+    if (urlData) {
+      try {
+        const decoded = JSON.parse(decodeURIComponent(urlData));
+        return {
+          email: decoded.email || "",
+          password: decoded.password || "",
+          businessName: decoded.businessName || "",
+          business_id: decoded.business_id || "",
+          businessDescription: decoded.businessDescription || "",
+          businessAddress: decoded.businessAddress || "",
+          businessPhone: decoded.businessPhone || "",
+          businessEmailAddress: decoded.businessEmailAddress || "",
+          businessCategory: decoded.businessCategory || "",
+          businessOpenHours: decoded.businessOpenHours || "",
+          businessOpenDays: decoded.businessOpenDays || "",
+          businessWebsite: decoded.businessWebsite || "",
+          businessPicture: "", // Don't restore base64 from URL
+          extra_information: decoded.extra_information || "",
+          faqs: decoded.faqs || [{ question: "", answer: "" }],
+          items: decoded.items || [{ name: "", price: 0, description: "" }],
+        };
+      } catch (e) {
+        console.error("Error parsing URL data:", e);
+      }
     }
-  }, [router]);
+    return {
+      email: "",
+      password: "",
+      businessName: "",
+      business_id: "",
+      businessDescription: "",
+      businessAddress: "",
+      businessPhone: "",
+      businessEmailAddress: "",
+      businessCategory: "",
+      businessOpenHours: "",
+      businessOpenDays: "",
+      businessWebsite: "",
+      businessPicture: "",
+      extra_information: "",
+      faqs: [{ question: "", answer: "" }],
+      items: [{ name: "", price: 0, description: "" }],
+    };
+  }, [searchParams]);
+
+  const getInitialStep = useCallback((): number => {
+    const stepParam = searchParams.get("step");
+    return stepParam ? parseInt(stepParam, 10) : 1;
+  }, [searchParams]);
+
+  const [currentStep, setCurrentStep] = useState(getInitialStep);
+  const [formData, setFormData] = useState<BusinessData>(getInitialFormData);
+  const [isAutoFillModalOpen, setIsAutoFillModalOpen] = useState(false);
+
+  // Handle auto-fill data extraction
+  const handleAutoFillData = useCallback(
+    (extractedData: Partial<BusinessData>) => {
+      setFormData((prev) => ({
+        ...prev,
+        businessName: extractedData.businessName || prev.businessName,
+        businessDescription:
+          extractedData.businessDescription || prev.businessDescription,
+        businessAddress: extractedData.businessAddress || prev.businessAddress,
+        businessPhone: extractedData.businessPhone || prev.businessPhone,
+        businessEmailAddress:
+          extractedData.businessEmailAddress || prev.businessEmailAddress,
+        businessCategory:
+          extractedData.businessCategory || prev.businessCategory,
+        businessOpenHours:
+          extractedData.businessOpenHours || prev.businessOpenHours,
+        businessOpenDays:
+          extractedData.businessOpenDays || prev.businessOpenDays,
+        businessWebsite: extractedData.businessWebsite || prev.businessWebsite,
+        extra_information:
+          extractedData.extra_information || prev.extra_information,
+        faqs:
+          extractedData.faqs && extractedData.faqs.length > 0
+            ? extractedData.faqs
+            : prev.faqs,
+        items:
+          extractedData.items && extractedData.items.length > 0
+            ? extractedData.items
+            : prev.items,
+      }));
+      showSuccessToast("Business information extracted successfully!");
+    },
+    [],
+  );
+
+  // Update URL whenever formData or currentStep changes
+  useEffect(() => {
+    const params = new URLSearchParams();
+    params.set("step", currentStep.toString());
+
+    // Create a copy of formData without the base64 image
+    const { businessPicture, ...dataWithoutImage } = formData;
+    console.log(businessPicture);
+    params.set("data", encodeURIComponent(JSON.stringify(dataWithoutImage)));
+
+    router.replace(`?${params.toString()}`, { scroll: false });
+  }, [formData, currentStep, router]);
 
   const totalSteps = 6;
 
   const validateCurrentStep = useCallback((): boolean => {
-    if (!formData) return false;
     switch (currentStep) {
+      case 1:
+        if (!formData.email) {
+          showErrorToast("Email is required");
+          return false;
+        }
+        // Email validation regex
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(formData.email)) {
+          showErrorToast("Please enter a valid email address");
+          return false;
+        }
+        if (!formData.password) {
+          showErrorToast("Password is required");
+          return false;
+        }
+        if (formData.password.length < 6) {
+          showErrorToast("Password must be at least 6 characters long");
+          return false;
+        }
+        return true;
+
       case 2:
         if (!formData.businessName) {
           showErrorToast("Business name is required");
@@ -114,6 +216,7 @@ export default function Home() {
           showErrorToast("Business phone is required");
           return false;
         }
+        // Phone validation (basic)
         const phoneRegex = /^[\d\s\-\+\(\)]+$/;
         if (!phoneRegex.test(formData.businessPhone)) {
           showErrorToast("Please enter a valid phone number");
@@ -123,10 +226,22 @@ export default function Home() {
           showErrorToast("Business email address is required");
           return false;
         }
+        // Validate business email
+        // const businessEmailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        // if (!businessEmailRegex.test(formData.businessEmailAddress)) {
+        //   showErrorToast("Please enter a valid business email address");
+        //   return false;
+        // }
         if (!formData.businessWebsite) {
           showErrorToast("Business website is required");
           return false;
         }
+        // URL validation (basic)
+        // const urlRegex = /^(https?:\/\/)?([\w\-]+\.)+[\w\-]+(\/[\w\-._~:/?#[\]@!$&'()*+,;=]*)?$/;
+        // if (!urlRegex.test(formData.businessWebsite)) {
+        //   showErrorToast("Please enter a valid website URL");
+        //   return false;
+        // }
         return true;
 
       case 4:
@@ -138,6 +253,10 @@ export default function Home() {
           showErrorToast("Business open days are required");
           return false;
         }
+        // if (!formData.businessPicture) {
+        //   showErrorToast("Business picture is required");
+        //   return false;
+        // }
         if (!formData.extra_information) {
           showErrorToast("Extra information is required");
           return false;
@@ -167,28 +286,21 @@ export default function Home() {
 
   const handleInputChange = useCallback(
     (field: keyof BusinessData, value: string) => {
-      setFormData((prev) => {
-        if (!prev) return prev;
-        return { ...prev, [field]: value };
-      });
+      setFormData((prev) => ({ ...prev, [field]: value }));
     },
     [],
   );
 
   const addFAQ = useCallback(() => {
-    setFormData((prev) => {
-      if (!prev) return prev;
-      return {
-        ...prev,
-        faqs: [...prev.faqs, { question: "", answer: "" }],
-      };
-    });
+    setFormData((prev) => ({
+      ...prev,
+      faqs: [...prev.faqs, { question: "", answer: "" }],
+    }));
   }, []);
 
   const updateFAQ = useCallback(
     (index: number, field: "question" | "answer", value: string) => {
       setFormData((prev) => {
-        if (!prev) return prev;
         const updatedFAQs = [...prev.faqs];
         updatedFAQs[index][field] = value;
         return { ...prev, faqs: updatedFAQs };
@@ -199,34 +311,26 @@ export default function Home() {
 
   const removeFAQ = useCallback(
     (index: number) => {
-      if (!formData) return;
       if (formData.faqs.length > 1) {
-        setFormData((prev) => {
-          if (!prev) return prev;
-          return {
-            ...prev,
-            faqs: prev.faqs.filter((_, i) => i !== index),
-          };
-        });
+        setFormData((prev) => ({
+          ...prev,
+          faqs: prev.faqs.filter((_, i) => i !== index),
+        }));
       }
     },
-    [formData?.faqs.length],
+    [formData.faqs.length],
   );
 
   const addItem = useCallback(() => {
-    setFormData((prev) => {
-      if (!prev) return prev;
-      return {
-        ...prev,
-        items: [...prev.items, { name: "", price: 0, description: "" }],
-      };
-    });
+    setFormData((prev) => ({
+      ...prev,
+      items: [...prev.items, { name: "", price: 0, description: "" }],
+    }));
   }, []);
 
   const updateItem = useCallback(
     (index: number, field: keyof Item, value: string | number) => {
       setFormData((prev) => {
-        if (!prev) return prev;
         const updatedItems = [...prev.items];
         updatedItems[index] = { ...updatedItems[index], [field]: value };
         return { ...prev, items: updatedItems };
@@ -237,18 +341,14 @@ export default function Home() {
 
   const removeItem = useCallback(
     (index: number) => {
-      if (!formData) return;
       if (formData.items.length > 1) {
-        setFormData((prev) => {
-          if (!prev) return prev;
-          return {
-            ...prev,
-            items: prev.items.filter((_, i) => i !== index),
-          };
-        });
+        setFormData((prev) => ({
+          ...prev,
+          items: prev.items.filter((_, i) => i !== index),
+        }));
       }
     },
-    [formData?.items.length],
+    [formData.items.length],
   );
 
   const nextStep = useCallback(() => {
@@ -258,11 +358,13 @@ export default function Home() {
   }, [currentStep, totalSteps, validateCurrentStep]);
 
   const prevStep = useCallback(() => {
-    if (currentStep > 2) setCurrentStep(currentStep - 1);
+    if (currentStep > 1) setCurrentStep(currentStep - 1);
   }, [currentStep]);
 
   const startOver = useCallback(() => {
     const resetData: BusinessData = {
+      email: "",
+      password: "",
       businessName: "",
       business_id: "",
       businessDescription: "",
@@ -279,27 +381,50 @@ export default function Home() {
       items: [{ name: "", price: 0, description: "" }],
     };
     setFormData(resetData);
-    setCurrentStep(2);
+    setCurrentStep(1);
   }, []);
 
   const handleSubmit = useCallback(async () => {
-    if (!formData) return;
     try {
       setIsSubmitting(true);
-      const res = await AUTH.updateBusinessDetails(business_id, formData);
-      if (res.message === "Business updated successfully") {
+      const res = await AUTH.register(formData);
+      if (res.message === "Business registered successfully") {
         localStorage.setItem("businessData", JSON.stringify(res.business));
+
+        // Redirect to dashboard
         router.push("/dashboard");
       }
     } catch {
     } finally {
       setIsSubmitting(false);
     }
-  }, [formData, router]);
-
+  }, [formData]);
+  useEffect(() => {
+    const businessData = localStorage.getItem("businessData");
+    if (businessData) {
+      const business = JSON.parse(businessData);
+      setAuth({
+        ...business,
+        isAuthenticated: true,
+        setAuth: setAuth,
+        logout: () => {},
+      });
+      router.push("/dashboard");
+      return;
+    }
+  }, []);
   const renderStep = useMemo(() => {
-    if (!formData) return null;
     switch (currentStep) {
+      case 1:
+        return (
+          <Step1
+            email={formData.email}
+            password={formData.password}
+            onEmailChange={(value) => handleInputChange("email", value)}
+            onPasswordChange={(value) => handleInputChange("password", value)}
+          />
+        );
+
       case 2:
         return (
           <Step2
@@ -399,11 +524,11 @@ export default function Home() {
 
   const stepIndicators = useMemo(
     () =>
-      Array.from({ length: totalSteps - 1 }).map((_, i) => (
+      Array.from({ length: totalSteps }).map((_, i) => (
         <div
           key={i}
           className={`h-2 w-8 rounded-full ${
-            i + 2 <= currentStep ? "bg-blue-600" : "bg-gray-600"
+            i + 1 <= currentStep ? "bg-blue-600" : "bg-gray-600"
           }`}
         />
       )),
@@ -415,18 +540,39 @@ export default function Home() {
       <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center z-20 flex-col">
         <div className="h-auto max-h-[90vh] w-full sm:w-[600px] drop-shadow-lg bg-black p-8 rounded-3xl overflow-y-auto scrollbar-hide">
           <MemoizedAnimatedText
-            text="Edit Your Business"
+            text="Hello, I am AlatChat AI"
             className=" text-2xl sm:text-4xl"
             delay={100}
             duration={0.6}
           />
           <MemoizedAnimatedText
-            text="Update your business information"
+            text="Can we get to know your business?"
             className=" text-lg animate-pulse text-blue-600"
             delay={100}
             duration={0.6}
           />
-          {currentStep > 2 && (
+          {currentStep === 1 && (
+            <div className="mt-4 flex justify-between items-center">
+              <Link href="/signin" className="text-blue-500 hover:underline">
+                Already have an account? Sign in
+              </Link>
+            </div>
+          )}
+          {currentStep === 1 && (
+            <div className="mt-4">
+              <button
+                onClick={() => setIsAutoFillModalOpen(true)}
+                className="w-full flex items-center justify-center gap-2 py-3 px-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl"
+              >
+                <Sparkles className="w-5 h-5" />
+                <span>Auto-Fill with AI</span>
+              </button>
+              <p className="text-xs text-gray-400 text-center mt-2">
+                Upload documents, provide a URL, or describe your business
+              </p>
+            </div>
+          )}
+          {currentStep > 1 && (
             <div className="mt-4 text-right">
               <button
                 onClick={startOver}
@@ -439,7 +585,7 @@ export default function Home() {
           <div className="mt-4 mb-6">
             <div className="flex justify-between items-center">
               <p className="text-sm text-gray-400">
-                Step {currentStep - 1} of {totalSteps - 1}
+                Step {currentStep} of {totalSteps}
               </p>
               <div className="flex gap-1">{stepIndicators}</div>
             </div>
@@ -473,16 +619,16 @@ export default function Home() {
           </motion.div>
         </div>
         <div className="flex gap-4 mt-6 self-start md:self-center px-10">
-          {currentStep > 2 && (
+          {currentStep > 0 && (
             <Button_v2
               onClick={prevStep}
-              className={`w-full ${currentStep === 2 ? "invisible" : ""}`}
+              className={`w-full ${currentStep === 1 ? "invisible" : ""}`}
               variant={"ghost"}
             >
               Previous
             </Button_v2>
           )}
-          {currentStep < 6 ? (
+          {currentStep < totalSteps ? (
             <Button_v2 onClick={nextStep} className="w-full">
               Next
             </Button_v2>
@@ -492,7 +638,7 @@ export default function Home() {
               className="w-full"
               disabled={isSubmitting}
             >
-              {isSubmitting ? "Updating..." : "Update"}
+              {isSubmitting ? "Submitting..." : "Submit"}
             </Button_v2>
           )}
         </div>
@@ -508,6 +654,13 @@ export default function Home() {
         moveParticlesOnHover={true}
         alphaParticles={false}
         disableRotation={false}
+      />
+
+      {/* Auto-fill Modal */}
+      <AutoFillModal
+        isOpen={isAutoFillModalOpen}
+        onClose={() => setIsAutoFillModalOpen(false)}
+        onDataExtracted={handleAutoFillData}
       />
     </div>
   );

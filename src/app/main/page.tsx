@@ -1,9 +1,6 @@
 "use client";
 
 import AnimatedText from "@/components/AnimatedText";
-import Particles from "../../components/Particles";
-import ClickSpark from "../../components/ClickSpark";
-import MultilayerCardV_3 from "@/components/shared/CardLayer3";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button_v2 } from "@/components/shared/Button";
 import { useState, useCallback, useMemo, memo, useEffect } from "react";
@@ -52,7 +49,6 @@ interface BusinessData {
 }
 
 // Memoized static components
-const MemoizedParticles = memo(Particles);
 const MemoizedAnimatedText = memo(AnimatedText);
 
 export default function Home() {

@@ -1,8 +1,6 @@
 import { HeroSection } from "@/components/landing/HeroSection";
 import { FeaturesSection } from "@/components/landing/FeaturesSection";
 import { HowItWorksSection } from "@/components/landing/HowItWorksSection";
-import { TeamSection } from "@/components/landing/TeamSection";
-import { PricingSection } from "@/components/landing/PricingSection";
 import Link from "next/link";
 import { MessageCircle } from "lucide-react";
 

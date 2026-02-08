@@ -4,11 +4,8 @@ import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Send,
-  Sparkles,
   User,
   Bot,
-  MoreVertical,
-  RotateCcw,
 } from "lucide-react";
 import { useAuthService } from "@/services/authService";
 
@@ -28,7 +25,6 @@ export default function ChatbotPage() {
   const [businessName, setBusinessName] = useState<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
   const authService = useAuthService();
 
   const scrollToBottom = () => {
@@ -61,7 +57,9 @@ export default function ChatbotPage() {
             try {
               const parsed = JSON.parse(savedMessages);
               // Convert timestamp strings back to Date objects
-              const messagesWithDates = parsed.map((msg: any) => ({
+              const messagesWithDates = parsed.map((msg: {
+                timestamp: string;
+              }) => ({
                 ...msg,
                 timestamp: new Date(msg.timestamp),
               }));
@@ -172,13 +170,12 @@ export default function ChatbotPage() {
       };
 
       setMessages((prev) => [...prev, botMessage]);
-    } catch (error: any) {
-      console.error("Chat error:", error);
-
+    } catch (err) {
+      console.log(err)
       // Display error message in chat
       const errorMessage: Message = {
         id: Date.now().toString(),
-        text: `Sorry, I encountered an error: ${error.message || "Please try again later."}`,
+        text: "Sorry, I encountered an error, Please try again later.",
         sender: "bot",
         timestamp: new Date(),
       };

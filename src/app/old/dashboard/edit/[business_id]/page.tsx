@@ -438,7 +438,7 @@ export default function Home() {
           />
           <MemoizedAnimatedText
             text="Update your business information"
-            className=" text-lg animate-pulse text-blue-600"
+            className=" text-lg animate-pulse text-[#7DD3C0]"
             delay={100}
             duration={0.6}
           />

@@ -423,7 +423,7 @@ export default function Home() {
           />
           <MemoizedAnimatedText
             text="Update your business information"
-            className=" text-lg animate-pulse text-blue-600"
+            className=" text-lg animate-pulse text-[#7DD3C0]"
             delay={100}
             duration={0.6}
           />
@@ -450,17 +450,17 @@ export default function Home() {
             animate={{ height: "auto" }}
             transition={{ duration: 0.3 }}
           >
-                <AnimatePresence mode="wait">
-                  <motion.div
-                    key={currentStep}
-                    initial={{ opacity: 0, x: 50 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: -50 }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    {renderStep}
-                  </motion.div>
-                </AnimatePresence>
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={currentStep}
+                initial={{ opacity: 0, x: 50 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -50 }}
+                transition={{ duration: 0.3 }}
+              >
+                {renderStep}
+              </motion.div>
+            </AnimatePresence>
           </motion.div>
         </div>
         <div className="flex gap-4 mt-6 self-start md:self-center px-10">

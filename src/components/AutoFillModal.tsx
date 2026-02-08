@@ -183,7 +183,7 @@ export default function AutoFillModal({
       <DialogContent className="sm:max-w-[600px] bg-white border-gray-700">
         <DialogHeader>
           <DialogTitle className="text-black flex items-center gap-2">
-            <Sparkles className="w-5 h-5 text-blue-500" />
+            <Sparkles className="w-5 h-5 text-[#7DD3C0]" />
             Auto-Fill Business Information
           </DialogTitle>
           <DialogDescription className="text-gray-900">
@@ -198,7 +198,7 @@ export default function AutoFillModal({
                 onClick={() => setInputMode("url")}
                 className="flex flex-col items-center justify-center p-6 border-2 border-dashed border-gray-600 rounded-lg hover:border-blue-500 transition-colors group"
               >
-                <Globe className="w-8 h-8 text-gray-900 group-hover:text-blue-500 mb-2" />
+                <Globe className="w-8 h-8 text-gray-900  mb-2" />
                 <span className="text-sm text-gray-900 text-center">
                   Enter Website URL
                 </span>
@@ -208,7 +208,7 @@ export default function AutoFillModal({
                 onClick={() => setInputMode("text")}
                 className="flex flex-col items-center justify-center p-6 border-2 border-dashed border-gray-600 rounded-lg hover:border-blue-500 transition-colors group"
               >
-                <PenSquare className="w-8 h-8 text-gray-900 group-hover:text-blue-500 mb-2" />
+                <PenSquare className="w-8 h-8 text-gray-900  mb-2" />
                 <span className="text-sm text-gray-900 text-center">
                   Write About Business
                 </span>
@@ -217,7 +217,7 @@ export default function AutoFillModal({
                 onClick={() => setInputMode("file")}
                 className="flex flex-col items-center justify-center p-6 border-2 border-dashed border-gray-600 rounded-lg hover:border-blue-500 transition-colors group"
               >
-                <Upload className="w-8 h-8 text-gray-900 group-hover:text-blue-500 mb-2" />
+                <Upload className="w-8 h-8 text-gray-900  mb-2" />
                 <span className="text-sm text-gray-900 text-center">
                   Upload Document
                 </span>

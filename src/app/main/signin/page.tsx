@@ -24,7 +24,6 @@ export default function SignIn() {
     setError("");
 
     try {
-      
       const response = await login({ email, password });
 
       // Store business data in localStorage
@@ -33,9 +32,7 @@ export default function SignIn() {
       // Redirect to dashboard
       router.push("/main/dashboard");
     } catch (err) {
-      setError(
-        "Failed to sign in. Please try again."
-      );
+      setError("Failed to sign in. Please try again.");
       console.error("Sign in error:", err);
     } finally {
       setIsLoading(false);
@@ -52,19 +49,19 @@ export default function SignIn() {
         duration={0.6}
       />
     ),
-    []
+    [],
   );
 
   const animatedSubtitle = useMemo(
     () => (
       <AnimatedText
         text="Sign in to view your business information"
-        className="text-lg animate-pulse text-blue-600"
+        className="text-lg animate-pulse text-[#7DD3C0]"
         delay={100}
         duration={0.6}
       />
     ),
-    []
+    [],
   );
 
   // Memoize Particles component to prevent re-renders
@@ -82,7 +79,7 @@ export default function SignIn() {
         disableRotation={false}
       />
     ),
-    []
+    [],
   );
 
   return (
@@ -133,7 +130,7 @@ export default function SignIn() {
                 Dont have an account?{" "}
                 <Link
                   href="/main"
-                  className="text-blue-600 hover:text-blue-500 underline"
+                  className="text-[#7DD3C0]  underline"
                 >
                   Register your business
                 </Link>

@@ -121,11 +121,11 @@ export function Footer() {
               Contact us
             </h3>
             <a
-              href="mailto:Contact@company.com"
+              href="mailto:info@alatchat.com"
               className="flex items-center gap-3 text-gray-300 hover:text-[#7DD3C0] transition-colors group"
             >
               <Mail className="w-6 h-6 group-hover:scale-110 transition-transform" />
-              <span>Contact@company.com</span>
+              <span>info@alatchat.com</span>
             </a>
           </motion.div>
         </div>

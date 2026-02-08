@@ -10,7 +10,11 @@ interface Item {
 
 interface Step6Props {
   items: Item[];
-  onUpdateItem: (index: number, field: keyof Item, value: string | number) => void;
+  onUpdateItem: (
+    index: number,
+    field: keyof Item,
+    value: string | number,
+  ) => void;
   onAddItem: () => void;
   onRemoveItem: (index: number) => void;
 }
@@ -40,10 +44,10 @@ const Step6 = memo(
                   type="number"
                   step="0.01"
                   placeholder="3500"
-                  value={item.price || ""}
-                  onChange={(e) =>
-                    onUpdateItem(index, "price", parseFloat(e.target.value))
-                  }
+                  value={item.price || 0}
+                  onChange={(e) => {
+                    onUpdateItem(index, "price", e.target.value);
+                  }}
                   className="outline-none border-none focus:outline-none focus:ring-0"
                 />
               </InputBlock>
@@ -58,7 +62,7 @@ const Step6 = memo(
                     onUpdateItem(index, "description", e.target.value)
                   }
                   className="w-full p-2 outline-none border-none focus:outline-none focus:ring-0 bg-transparent"
-                //   rows={2}
+                  //   rows={2}
                 />
               </InputBlock>
             </div>
@@ -77,7 +81,7 @@ const Step6 = memo(
         </Button_v2>
       </div>
     );
-  }
+  },
 );
 
 Step6.displayName = "Step6";

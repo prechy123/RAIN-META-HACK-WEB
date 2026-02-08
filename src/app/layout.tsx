@@ -66,7 +66,7 @@ export default function RootLayout({
       </head>
 
       <body
-        className={`${poppins.className} antialiased bg-black text-white selection:bg-purple-500/20 selection:text-purple-100`}
+        className={`${poppins.className} antialiased bg-white text-black selection:bg-purple-500/20 selection:text-purple-100`}
         suppressHydrationWarning
       >
         <a

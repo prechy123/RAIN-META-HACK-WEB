@@ -1,4 +1,5 @@
-import { businessService } from "../utils/api/axios";
+import { boolean } from "zod";
+import { businessService, chatService } from "../utils/api/axios";
 import useBaseService from "../utils/hooks/useBaseService";
 
 export interface RegisterBody {
@@ -91,6 +92,7 @@ export interface FAQ {
 
 export const useAuthService = () => {
   const { post, get, put } = useBaseService("", businessService, true);
+  const { post: chatPost } = useBaseService("", chatService, false);
 
   const register = async (body: RegisterBody): Promise<RegisterResponse> => {
     return await post<RegisterResponse, RegisterBody>("signup", body);
@@ -102,7 +104,7 @@ export const useAuthService = () => {
   }): Promise<LoginResponse> => {
     return await post<LoginResponse, undefined>(
       `login?email=${body.email}&password=${body.password}`,
-      undefined
+      undefined,
     );
   };
 
@@ -112,7 +114,7 @@ export const useAuthService = () => {
 
   const updateBusinessDetails = async (
     business_id: string,
-    body: Partial<Business>
+    body: Partial<Business>,
   ): Promise<{
     message: string;
     business: Business;
@@ -126,5 +128,21 @@ export const useAuthService = () => {
     >(`${business_id}`, body);
   };
 
-  return { register, login, getBusinessDetails, updateBusinessDetails };
+  const webChat = async (
+    message: string,
+    session_id: string,
+  ): Promise<{
+    answer: string;
+    state: string;
+    business_name: string | null;
+    business_description: string | null;
+    session_reset: boolean;
+  }> => {
+    return await chatPost("web-chat", {
+      message,
+      session_id,
+    });
+  };
+
+  return { register, login, getBusinessDetails, updateBusinessDetails, webChat };
 };

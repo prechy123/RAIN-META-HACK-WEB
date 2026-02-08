@@ -5,17 +5,18 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
 
 const navLinks = [
-  { name: "Home", href: "#" },
+  { name: "Home", href: "/#" },
   { name: "Features", href: "#features" },
   { name: "How it works", href: "#how-it-works" },
-  { name: "Team", href: "#team" },
-  { name: "Pricing", href: "#pricing" },
-  { name: "Login", href: "/login" },
+  { name: "Chat Bot", href: "/main/chatbot" },
+  { name: "Login", href: "/main/signin" },
 ];
 
 export function Header() {
+  const router = useRouter();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const toggleMobileMenu = () => {
@@ -34,13 +35,17 @@ export function Header() {
           >
             <Link href="/" className="inline-block">
               <motion.div
-                className="w-12 h-12 bg-gray-300 rounded-2xl flex items-center justify-center transition-colors"
+                className="w-12 h-12  flex items-center justify-center transition-colors"
                 whileHover={{
                   backgroundColor: "#d1d5db",
                   transition: { duration: 0.2 },
                 }}
               >
-                {/* Logo placeholder - replace with actual logo */}
+                <img
+                  src="/logo2.jpeg"
+                  alt="Rain Logo"
+                  className="w-full h-full object-contain rounded-lg"
+                />
               </motion.div>
             </Link>
           </motion.div>
@@ -93,7 +98,8 @@ export function Header() {
             >
               <Button
                 size="lg"
-                className="bg-[#7DD3C0] hover:bg-[#6BC2AF] text-gray-900 font-semibold px-6 py-2 rounded-full shadow-md hover:shadow-lg transition-all duration-300"
+                className="bg-[#7DD3C0] hover:bg-[#6BC2AF]  font-semibold px-6 py-2 rounded-full shadow-md hover:shadow-lg transition-all duration-300"
+                onClick={() => router.push("/main")}
               >
                 Get Started
               </Button>

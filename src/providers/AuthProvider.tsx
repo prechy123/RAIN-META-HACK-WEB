@@ -32,7 +32,7 @@ export default function AuthProvider({
       //     setAuth: setAuth,
       //     logout: () => {},
       //   });
-      //   router.push("/dashboard");
+      //   router.push("/main/dashboard");
       //   return;
       // }
 

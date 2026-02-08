@@ -31,7 +31,7 @@ export default function SignIn() {
       localStorage.setItem("businessData", JSON.stringify(response.business));
 
       // Redirect to dashboard
-      router.push("/dashboard");
+      router.push("/main/dashboard");
     } catch (err) {
       setError(
         "Failed to sign in. Please try again."
@@ -88,7 +88,7 @@ export default function SignIn() {
   return (
     <div className="relative flex items-center justify-center h-screen overflow-hidden z-10">
       <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center z-20 flex-col">
-        <div className="h-auto w-full sm:w-[600px] drop-shadow-lg bg-black p-8 rounded-3xl">
+        <div className="h-auto w-full sm:w-[600px] drop-shadow-lg p-8 rounded-3xl">
           {animatedTitle}
           {animatedSubtitle}
 
@@ -132,7 +132,7 @@ export default function SignIn() {
               <p className="text-sm text-gray-400">
                 Dont have an account?{" "}
                 <Link
-                  href="/"
+                  href="/main"
                   className="text-blue-600 hover:text-blue-500 underline"
                 >
                   Register your business

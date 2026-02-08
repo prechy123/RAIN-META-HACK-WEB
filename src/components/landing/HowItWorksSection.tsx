@@ -28,7 +28,7 @@ const steps = [
   },
   {
     number: 2,
-    title: "Complete SetUp",
+    title: "Complete Set Up",
     description:
       "Provide your business information so the AI Can answer customers correctly",
     icon: (

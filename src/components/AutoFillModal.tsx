@@ -180,13 +180,13 @@ export default function AutoFillModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-[600px] bg-black border-gray-700">
+      <DialogContent className="sm:max-w-[600px] bg-white border-gray-700">
         <DialogHeader>
-          <DialogTitle className="text-white flex items-center gap-2">
+          <DialogTitle className="text-black flex items-center gap-2">
             <Sparkles className="w-5 h-5 text-blue-500" />
             Auto-Fill Business Information
           </DialogTitle>
-          <DialogDescription className="text-gray-400">
+          <DialogDescription className="text-gray-900">
             Let AI extract your business information from various sources
           </DialogDescription>
         </DialogHeader>
@@ -198,8 +198,8 @@ export default function AutoFillModal({
                 onClick={() => setInputMode("url")}
                 className="flex flex-col items-center justify-center p-6 border-2 border-dashed border-gray-600 rounded-lg hover:border-blue-500 transition-colors group"
               >
-                <Globe className="w-8 h-8 text-gray-400 group-hover:text-blue-500 mb-2" />
-                <span className="text-sm text-gray-300 text-center">
+                <Globe className="w-8 h-8 text-gray-900 group-hover:text-blue-500 mb-2" />
+                <span className="text-sm text-gray-900 text-center">
                   Enter Website URL
                 </span>
               </button>
@@ -208,8 +208,8 @@ export default function AutoFillModal({
                 onClick={() => setInputMode("text")}
                 className="flex flex-col items-center justify-center p-6 border-2 border-dashed border-gray-600 rounded-lg hover:border-blue-500 transition-colors group"
               >
-                <PenSquare className="w-8 h-8 text-gray-400 group-hover:text-blue-500 mb-2" />
-                <span className="text-sm text-gray-300 text-center">
+                <PenSquare className="w-8 h-8 text-gray-900 group-hover:text-blue-500 mb-2" />
+                <span className="text-sm text-gray-900 text-center">
                   Write About Business
                 </span>
               </button>
@@ -217,8 +217,8 @@ export default function AutoFillModal({
                 onClick={() => setInputMode("file")}
                 className="flex flex-col items-center justify-center p-6 border-2 border-dashed border-gray-600 rounded-lg hover:border-blue-500 transition-colors group"
               >
-                <Upload className="w-8 h-8 text-gray-400 group-hover:text-blue-500 mb-2" />
-                <span className="text-sm text-gray-300 text-center">
+                <Upload className="w-8 h-8 text-gray-900 group-hover:text-blue-500 mb-2" />
+                <span className="text-sm text-gray-900 text-center">
                   Upload Document
                 </span>
               </button>
@@ -235,7 +235,7 @@ export default function AutoFillModal({
               >
                 <label htmlFor="file-upload" className="cursor-pointer">
                   <div className="border-2 border-dashed border-gray-600 rounded-lg p-8 text-center hover:border-blue-500 transition-colors">
-                    <FileText className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                    <FileText className="w-12 h-12 text-gray-900 mx-auto mb-4" />
                     <input
                       type="file"
                       accept=".txt,.doc,.docx"
@@ -246,7 +246,7 @@ export default function AutoFillModal({
                     <span className="text-blue-500 hover:text-blue-400">
                       Click to upload
                     </span>
-                    <p className="text-sm text-gray-400 mt-2">
+                    <p className="text-sm text-gray-900 mt-2">
                       TXT, DOC, or DOCX files only (Max 10MB)
                     </p>
                     <p className="text-xs text-gray-500 mt-2">
@@ -258,7 +258,7 @@ export default function AutoFillModal({
                         <p className="text-sm text-green-500">
                           ✓ Selected: {selectedFile.name}
                         </p>
-                        <p className="text-xs text-gray-400">
+                        <p className="text-xs text-gray-900">
                           {(selectedFile.size / 1024).toFixed(2)} KB
                         </p>
                       </div>
@@ -286,7 +286,7 @@ export default function AutoFillModal({
                 className="space-y-4"
               >
                 <div>
-                  <p className="mb-2 text-gray-300">Website URL</p>
+                  <p className="mb-2 text-gray-900">Website URL</p>
                   <InputBlock variant="neubrutalism" size="lg">
                     <Input
                       type="url"
@@ -296,7 +296,7 @@ export default function AutoFillModal({
                       className="outline-none border-none focus:outline-none focus:ring-0"
                     />
                   </InputBlock>
-                  <p className="text-xs text-gray-400 mt-2">
+                  <p className="text-xs text-gray-900 mt-2">
                     Enter your business website URL to extract information
                   </p>
                 </div>
@@ -318,14 +318,14 @@ export default function AutoFillModal({
                 className="space-y-4"
               >
                 <div>
-                  <p className="mb-2 text-gray-300">Describe Your Business</p>
+                  <p className="mb-2 text-gray-900">Describe Your Business</p>
                   <textarea
                     placeholder="Tell us about your business... Include details like name, description, address, phone, email, operating hours, services/products, FAQs, etc."
                     value={businessText}
                     onChange={(e) => setBusinessText(e.target.value)}
-                    className="w-full h-48 p-4 bg-gray-900 border-2 border-gray-700 rounded-lg text-white placeholder:text-gray-500 focus:border-blue-500 focus:outline-none resize-none"
+                    className="w-full h-48 p-4 border-2 border-gray-700 rounded-lg resize-none"
                   />
-                  <p className="text-xs text-gray-400 mt-2">
+                  <p className="text-xs text-gray-900 mt-2">
                     Provide as much detail as possible for better extraction
                   </p>
                 </div>
@@ -371,8 +371,8 @@ export default function AutoFillModal({
                 transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
                 className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full mx-auto mb-4"
               />
-              <p className="text-gray-300">AI is analyzing your data...</p>
-              <p className="text-sm text-gray-400 mt-2">
+              <p className="text-gray-900">AI is analyzing your data...</p>
+              <p className="text-sm text-gray-900 mt-2">
                 This may take a few moments
               </p>
             </div>

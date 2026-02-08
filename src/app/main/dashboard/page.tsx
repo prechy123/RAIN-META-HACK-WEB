@@ -21,7 +21,7 @@ export default function Dashboard() {
       setBusinessData(JSON.parse(storedData));
     } else {
       // If no data, redirect to sign in
-      router.push("/signin");
+      router.push("/main/signin");
     }
   }, [router]);
 
@@ -40,43 +40,31 @@ export default function Dashboard() {
           disableRotation={false}
         />
         <div className="relative z-10">
-          <p className="text-white text-xl">Loading...</p>
+          <p className=" text-xl">Loading...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="relative min-h-screen bg-black">
+    <div className="relative min-h-screen mt-20">
       {/* Particles Background - Fixed positioning */}
-      <div className="fixed inset-0 z-0">
-        <Particles
-          className="w-full h-full"
-          particleColors={["#ffffff", "#ffffff"]}
-          particleCount={400}
-          particleSpread={10}
-          speed={0.1}
-          particleBaseSize={100}
-          moveParticlesOnHover={true}
-          alphaParticles={false}
-          disableRotation={false}
-        />
-      </div>
+
 
       {/* Content */}
-      <div className="relative z-10 p-4 sm:p-8 max-w-7xl mx-auto bg-black/10 backdrop-blur-sm ">
+      <div className="relative z-10 p-4 sm:p-8 max-w-7xl mx-auto ">
         {/* Header */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8 pt-4">
           <AnimatedText
             text="Business Dashboard"
-            className="text-3xl sm:text-4xl text-white"
+            className="text-3xl sm:text-4xl "
             delay={100}
             duration={0.6}
           />
           <div className="flex gap-2">
             <Button_v2
               className="whitespace-nowrap"
-              onClick={() => router.push(`/dashboard/edit/${businessData.business_id}`)}
+              onClick={() => router.push(`/main/dashboard/edit/${businessData.business_id}`)}
             >
               Edit
             </Button_v2>
@@ -84,7 +72,7 @@ export default function Dashboard() {
               className="whitespace-nowrap bg-red-600 hover:bg-red-700"
               onClick={() => {
                 localStorage.removeItem("businessData");
-                router.push("/signin");
+                router.push("/main/signin");
               }}
             >
               Logout
@@ -101,31 +89,31 @@ export default function Dashboard() {
         >
           {/* <MultilayerCardV_3> */}
           <div className="p-4 sm:p-6">
-            <h2 className="text-xl sm:text-2xl font-bold text-white mb-4">
+            <h2 className="text-xl sm:text-2xl font-bold  mb-4">
               Business Overview
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <p className="text-gray-400 text-sm">Business ID</p>
-                <p className="text-white font-semibold break-words">
+                <p className=" font-semibold break-words">
                   {businessData.business_id}
                 </p>
               </div>
               <div>
                 <p className="text-gray-400 text-sm">Email</p>
-                <p className="text-white font-semibold break-words">
+                <p className=" font-semibold break-words">
                   {businessData.email}
                 </p>
               </div>
               <div>
                 <p className="text-gray-400 text-sm">Business Name</p>
-                <p className="text-white font-semibold break-words">
+                <p className=" font-semibold break-words">
                   {businessData.businessName}
                 </p>
               </div>
               <div>
                 <p className="text-gray-400 text-sm">Category</p>
-                <p className="text-white font-semibold break-words">
+                <p className=" font-semibold break-words">
                   {businessData.businessCategory}
                 </p>
               </div>
@@ -142,58 +130,58 @@ export default function Dashboard() {
           className="mb-6"
         >
           <div className="p-4 sm:p-6">
-            <h2 className="text-xl sm:text-2xl font-bold text-white mb-4">
+            <h2 className="text-xl sm:text-2xl font-bold  mb-4">
               Business Details
             </h2>
             <div className="space-y-4">
               <div>
                 <p className="text-gray-400 text-sm">Description</p>
-                <p className="text-white break-words">
+                <p className=" break-words">
                   {businessData.businessDescription}
                 </p>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <p className="text-gray-400 text-sm">Address</p>
-                  <p className="text-white break-words">
+                  <p className=" break-words">
                     {businessData.businessAddress}
                   </p>
                 </div>
                 <div>
                   <p className="text-gray-400 text-sm">Phone</p>
-                  <p className="text-white break-words">
+                  <p className=" break-words">
                     {businessData.businessPhone}
                   </p>
                 </div>
                 <div>
                   <p className="text-gray-400 text-sm">Business Email</p>
-                  <p className="text-white break-words">
+                  <p className=" break-words">
                     {businessData.businessEmailAddress}
                   </p>
                 </div>
                 <div>
                   <p className="text-gray-400 text-sm">Website</p>
-                  <p className="text-white break-words">
+                  <p className=" break-words">
                     {businessData.businessWebsite || "N/A"}
                   </p>
                 </div>
               </div>
               <div>
                 <p className="text-gray-400 text-sm">Open Hours</p>
-                <p className="text-white break-words">
+                <p className=" break-words">
                   {businessData.businessOpenHours}
                 </p>
               </div>
               <div>
                 <p className="text-gray-400 text-sm">Open Days</p>
-                <p className="text-white break-words">
+                <p className=" break-words">
                   {businessData.businessOpenDays}
                 </p>
               </div>
               {businessData.extra_information && (
                 <div>
                   <p className="text-gray-400 text-sm">Extra Information</p>
-                  <p className="text-white break-words">
+                  <p className=" break-words">
                     {businessData.extra_information}
                   </p>
                 </div>
@@ -211,7 +199,7 @@ export default function Dashboard() {
             className="mb-6"
           >
             <div className="p-4 sm:p-6">
-              <h2 className="text-xl sm:text-2xl font-bold text-white mb-4">
+              <h2 className="text-xl sm:text-2xl font-bold  mb-4">
                 Business Picture
               </h2>
               <img
@@ -232,17 +220,17 @@ export default function Dashboard() {
             className="mb-6"
           >
             <div className="p-4 sm:p-6">
-              <h2 className="text-xl sm:text-2xl font-bold text-white mb-4">
+              <h2 className="text-xl sm:text-2xl font-bold  mb-4">
                 FAQs
               </h2>
               <div className="space-y-4">
                 {businessData.faqs.map((faq, index) => (
                   <div key={index} className="py-2">
-                    <div className="bg-black/30 backdrop-blur-sm rounded-lg p-4 border border-gray-700  transition-colors">
-                      <p className="text-blue-400 font-bold text-lg mb-2 break-words">
+                    <div className=" rounded-lg p-4 border border-gray-700  transition-colors">
+                      <p className="font-bold text-lg mb-2 break-words">
                         Q: {faq.question}
                       </p>
-                      <p className="text-gray-300 break-words leading-relaxed">
+                      <p className=" break-words leading-relaxed">
                         A: {faq.answer}
                       </p>
                     </div>
@@ -262,23 +250,23 @@ export default function Dashboard() {
             className="mb-6 pb-8"
           >
             <div className="p-4 sm:p-6">
-              <h2 className="text-xl sm:text-2xl font-bold text-white mb-4">
+              <h2 className="text-xl sm:text-2xl font-bold  mb-4">
                 Menu Items
               </h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 {businessData.items.map((item, index) => (
                   <div
                     key={index}
-                    className="bg-black/30 backdrop-blur-sm rounded-lg p-4 border border-gray-700 transition-colors"
+                    className="rounded-lg p-4 border border-gray-700 transition-colors"
                   >
-                    <h3 className="text-white font-bold text-lg mb-2 break-words">
+                    <h3 className=" font-bold text-lg mb-2 break-words">
                       {item.name}
                     </h3>
-                    <p className="text-blue-400 font-semibold mb-2">
+                    <p className=" font-semibold mb-2">
                       ₦ {item.price}
                     </p>
                     {item.description && (
-                      <p className="text-gray-300 text-sm break-words">
+                      <p className=" text-sm break-words">
                         {item.description}
                       </p>
                     )}

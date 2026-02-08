@@ -227,11 +227,11 @@ export default function Home() {
           return false;
         }
         // Validate business email
-        // const businessEmailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        // if (!businessEmailRegex.test(formData.businessEmailAddress)) {
-        //   showErrorToast("Please enter a valid business email address");
-        //   return false;
-        // }
+        const businessEmailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!businessEmailRegex.test(formData.businessEmailAddress)) {
+          showErrorToast("Please enter a valid business email address");
+          return false;
+        }
         if (!formData.businessWebsite) {
           showErrorToast("Business website is required");
           return false;
@@ -392,7 +392,7 @@ export default function Home() {
         localStorage.setItem("businessData", JSON.stringify(res.business));
 
         // Redirect to dashboard
-        router.push("/dashboard");
+        router.push("/main/dashboard");
       }
     } catch {
     } finally {
@@ -409,7 +409,7 @@ export default function Home() {
         setAuth: setAuth,
         logout: () => {},
       });
-      router.push("/dashboard");
+      router.push("/main/dashboard");
       return;
     }
   }, []);
@@ -528,7 +528,7 @@ export default function Home() {
         <div
           key={i}
           className={`h-2 w-8 rounded-full ${
-            i + 1 <= currentStep ? "bg-blue-600" : "bg-gray-600"
+            i + 1 <= currentStep ? "bg-[#7DD3C0]" : "bg-gray-600"
           }`}
         />
       )),
@@ -538,7 +538,7 @@ export default function Home() {
   return (
     <div className="relative flex items-center justify-center h-screen overflow-hidden z-10">
       <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center z-20 flex-col">
-        <div className="h-auto max-h-[90vh] w-full sm:w-[600px] drop-shadow-lg bg-black p-8 rounded-3xl overflow-y-auto scrollbar-hide">
+        <div className="h-auto max-h-[90vh] w-full sm:w-[600px] drop-shadow-lg  p-8 rounded-3xl overflow-y-auto scrollbar-hide">
           <MemoizedAnimatedText
             text="Hello, I am AlatChat AI"
             className=" text-2xl sm:text-4xl"
@@ -547,13 +547,16 @@ export default function Home() {
           />
           <MemoizedAnimatedText
             text="Can we get to know your business?"
-            className=" text-lg animate-pulse text-blue-600"
+            className=" text-lg"
             delay={100}
             duration={0.6}
           />
           {currentStep === 1 && (
             <div className="mt-4 flex justify-between items-center">
-              <Link href="/signin" className="text-blue-500 hover:underline">
+              <Link
+                href="/main/signin"
+                className=" hover:underline"
+              >
                 Already have an account? Sign in
               </Link>
             </div>
@@ -562,7 +565,7 @@ export default function Home() {
             <div className="mt-4">
               <button
                 onClick={() => setIsAutoFillModalOpen(true)}
-                className="w-full flex items-center justify-center gap-2 py-3 px-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl"
+                className="w-full flex items-center justify-center gap-2 py-3 px-4 bg-[#7DD3C0] hover:bg-[#6BC2AF] rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl"
               >
                 <Sparkles className="w-5 h-5" />
                 <span>Auto-Fill with AI</span>
@@ -595,27 +598,17 @@ export default function Home() {
             animate={{ height: "auto" }}
             transition={{ duration: 0.3 }}
           >
-            <MultilayerCardV_3>
-              <ClickSpark
-                sparkColor="#fff"
-                sparkSize={10}
-                sparkRadius={15}
-                sparkCount={8}
-                duration={400}
-              >
-                <AnimatePresence mode="wait">
-                  <motion.div
-                    key={currentStep}
-                    initial={{ opacity: 0, x: 50 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: -50 }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    {renderStep}
-                  </motion.div>
-                </AnimatePresence>
-              </ClickSpark>
-            </MultilayerCardV_3>
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={currentStep}
+                  initial={{ opacity: 0, x: 50 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -50 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  {renderStep}
+                </motion.div>
+              </AnimatePresence>
           </motion.div>
         </div>
         <div className="flex gap-4 mt-6 self-start md:self-center px-10">
@@ -623,7 +616,7 @@ export default function Home() {
             <Button_v2
               onClick={prevStep}
               className={`w-full ${currentStep === 1 ? "invisible" : ""}`}
-              variant={"ghost"}
+              
             >
               Previous
             </Button_v2>
@@ -644,17 +637,6 @@ export default function Home() {
         </div>
       </div>
 
-      <MemoizedParticles
-        className="z-10"
-        particleColors={["#ffffff", "#ffffff"]}
-        particleCount={400}
-        particleSpread={10}
-        speed={0.1}
-        particleBaseSize={100}
-        moveParticlesOnHover={true}
-        alphaParticles={false}
-        disableRotation={false}
-      />
 
       {/* Auto-fill Modal */}
       <AutoFillModal

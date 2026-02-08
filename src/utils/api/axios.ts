@@ -15,4 +15,5 @@ export const axiosInstance = axios.create({
   export const baseService = createService();
   export const authService = createService("auth");
   export const businessService = createService("business");
+  export const chatService = createService("chatbot");
   

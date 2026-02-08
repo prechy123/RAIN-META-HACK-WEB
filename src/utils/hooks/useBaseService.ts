@@ -73,9 +73,9 @@ const useBaseService = (
     }
   };
 
-  const post = async <T, P>(endpoint: string, payload: P): Promise<T> => {
+  const post = async <T, P>(endpoint: string, payload: P, loading: boolean = true): Promise<T> => {
     try {
-      showToast("loading", "Please wait...")
+      if (loading) showToast("loading", "Please wait...")
       const url = `${subURL}/${endpoint}`;
       const response = await axiosInstance.post(url, payload);
       toast.dismiss()
@@ -83,10 +83,13 @@ const useBaseService = (
     } catch (error) {
       handleExpiredToken(error as AxiosError<IErrorResponse>);
       toast.dismiss()
-      if (error instanceof AxiosError && error.response?.data?.message) {
-        showToast("error", error.response.data.message);
-      } else {
-        showToast("error", "Try again later");
+      if (loading) {
+
+        if (error instanceof AxiosError && error.response?.data?.message) {
+          showToast("error", error.response.data.message);
+        } else {
+          showToast("error", "Try again later");
+        }
       }
       return Promise.reject(error);
     }

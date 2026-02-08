@@ -78,10 +78,10 @@ export default function Home() {
         businessPicture: "",
         extra_information: parsedData.extra_information || "",
         faqs: parsedData.faqs || [{ question: "", answer: "" }],
-        items: parsedData.items || [{ name: "", price: 0, description: "" }],
+        items: parsedData.items || [{ name: "", price: "", description: "" }],
       });
     } else {
-      router.push("/signin");
+      router.push("/main/signin");
     }
   }, [router]);
 
@@ -123,10 +123,16 @@ export default function Home() {
           showErrorToast("Business email address is required");
           return false;
         }
+        const businessEmailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!businessEmailRegex.test(formData.businessEmailAddress)) {
+          showErrorToast("Please enter a valid business email address");
+          return false;
+        }
         if (!formData.businessWebsite) {
           showErrorToast("Business website is required");
           return false;
         }
+
         return true;
 
       case 4:
@@ -152,7 +158,12 @@ export default function Home() {
         return true;
 
       case 6:
-        if (!formData.items.every((item) => item.name && item.price > 0)) {
+        if (
+          !formData.items.every(
+            (item) =>
+              item.name && item.price && parseFloat(String(item.price)) > 0,
+          )
+        ) {
           showErrorToast(
             "All items must have a name and a price greater than 0",
           );
@@ -228,7 +239,12 @@ export default function Home() {
       setFormData((prev) => {
         if (!prev) return prev;
         const updatedItems = [...prev.items];
-        updatedItems[index] = { ...updatedItems[index], [field]: value };
+        // Convert price to string to match backend expectations
+        const processedValue = field === "price" ? String(value) : value;
+        updatedItems[index] = {
+          ...updatedItems[index],
+          [field]: processedValue,
+        };
         return { ...prev, items: updatedItems };
       });
     },
@@ -289,7 +305,7 @@ export default function Home() {
       const res = await AUTH.updateBusinessDetails(business_id, formData);
       if (res.message === "Business updated successfully") {
         localStorage.setItem("businessData", JSON.stringify(res.business));
-        router.push("/dashboard");
+        router.push("/main/dashboard");
       }
     } catch {
     } finally {

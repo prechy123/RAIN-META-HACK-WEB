@@ -14,7 +14,7 @@ export const Button_v2 = ({
         // light mode
         "text-zinc-50 bg-gradient-to-tr from-zinc-900 to-zinc-700 hover:shadow-zinc-500/30",
         // dark mode
-        "text-zinc-900 bg-gradient-to-tr from-zinc-50 to-zinc-100 hover:shadow-zinc-700/30",
+        // "text-zinc-900 bg-gradient-to-tr from-zinc-50 to-zinc-100 hover:shadow-zinc-700/30",
         rest.className
       )}
     >

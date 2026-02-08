@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { Facebook, Twitter, Linkedin, Instagram, Mail } from "lucide-react";
+import { usePathname } from "next/navigation";
 
 const productLinks = [
   { name: "Features", href: "#features" },
@@ -23,9 +24,13 @@ const socialLinks = [
 ];
 
 export function Footer() {
+  const pathName = usePathname()
+  if (pathName.startsWith("/main/chatbot")) {
+    return null; // Don't render the footer on the chatbot page
+  }
   return (
     <footer className=" bg-white py-10">
-      <div className="container mx-auto px-4 bg-[#2B2E33] text-white py-12">
+      <div className="container mx-auto px-4 bg-[#2B2E33] text-white py-12 rounded-2xl">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
           {/* Logo and Tagline Section */}
           <motion.div
@@ -36,10 +41,7 @@ export function Footer() {
             className="space-y-6"
           >
             <Link href="/" className="inline-block">
-              <div className="w-24 h-24 bg-gray-300 rounded-3xl flex items-center justify-center hover:bg-gray-400 transition-colors">
-                {/* Logo placeholder - replace with actual logo */}
-                
-              </div>
+              AlatChat AI
             </Link>
             <p className="text-gray-300 text-lg font-medium">
               Work more, Chat less, Grow faster

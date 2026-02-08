@@ -1,8 +1,8 @@
 "use client";
 
 import AnimatedText from "@/components/AnimatedText";
-import Particles from "../../../../components/Particles";
-import ClickSpark from "../../../../components/ClickSpark";
+import Particles from "../../../../../components/Particles";
+import ClickSpark from "../../../../../components/ClickSpark";
 import MultilayerCardV_3 from "@/components/shared/CardLayer3";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button_v2 } from "@/components/shared/Button";
@@ -81,7 +81,7 @@ export default function Home() {
         items: parsedData.items || [{ name: "", price: 0, description: "" }],
       });
     } else {
-      router.push("/signin");
+      router.push("/main/signin");
     }
   }, [router]);
 
@@ -121,6 +121,11 @@ export default function Home() {
         }
         if (!formData.businessEmailAddress) {
           showErrorToast("Business email address is required");
+          return false;
+        }
+        const businessEmailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!businessEmailRegex.test(formData.businessEmailAddress)) {
+          showErrorToast("Please enter a valid business email address");
           return false;
         }
         if (!formData.businessWebsite) {
@@ -289,7 +294,7 @@ export default function Home() {
       const res = await AUTH.updateBusinessDetails(business_id, formData);
       if (res.message === "Business updated successfully") {
         localStorage.setItem("businessData", JSON.stringify(res.business));
-        router.push("/dashboard");
+        router.push("/main/dashboard");
       }
     } catch {
     } finally {
@@ -413,7 +418,7 @@ export default function Home() {
   return (
     <div className="relative flex items-center justify-center h-screen overflow-hidden z-10">
       <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center z-20 flex-col">
-        <div className="h-auto max-h-[90vh] w-full sm:w-[600px] drop-shadow-lg bg-black p-8 rounded-3xl overflow-y-auto scrollbar-hide">
+        <div className="h-auto max-h-[90vh] w-full sm:w-[600px]  p-8 rounded-3xl overflow-y-auto scrollbar-hide">
           <MemoizedAnimatedText
             text="Edit Your Business"
             className=" text-2xl sm:text-4xl"
@@ -449,14 +454,6 @@ export default function Home() {
             animate={{ height: "auto" }}
             transition={{ duration: 0.3 }}
           >
-            <MultilayerCardV_3>
-              <ClickSpark
-                sparkColor="#fff"
-                sparkSize={10}
-                sparkRadius={15}
-                sparkCount={8}
-                duration={400}
-              >
                 <AnimatePresence mode="wait">
                   <motion.div
                     key={currentStep}
@@ -468,8 +465,6 @@ export default function Home() {
                     {renderStep}
                   </motion.div>
                 </AnimatePresence>
-              </ClickSpark>
-            </MultilayerCardV_3>
           </motion.div>
         </div>
         <div className="flex gap-4 mt-6 self-start md:self-center px-10">
@@ -497,18 +492,6 @@ export default function Home() {
           )}
         </div>
       </div>
-
-      <MemoizedParticles
-        className="z-10"
-        particleColors={["#ffffff", "#ffffff"]}
-        particleCount={400}
-        particleSpread={10}
-        speed={0.1}
-        particleBaseSize={100}
-        moveParticlesOnHover={true}
-        alphaParticles={false}
-        disableRotation={false}
-      />
     </div>
   );
 }

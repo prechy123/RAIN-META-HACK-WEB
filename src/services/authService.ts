@@ -1,4 +1,4 @@
-import { businessService, chatService } from "../utils/api/axios";
+import { businessService, chatService, webHookService } from "../utils/api/axios";
 import useBaseService from "../utils/hooks/useBaseService";
 
 export interface RegisterBody {
@@ -89,9 +89,23 @@ export interface FAQ {
   answer: string;
 }
 
+export interface GetAllBusinessesResponse {
+  businesses: {
+    business_id: string;
+    name: string;
+    description: string;
+  }[];
+  count: number;
+}
+
 export const useAuthService = () => {
   const { post, get, put } = useBaseService("", businessService, true);
-  const { post: chatPost } = useBaseService("", chatService, false);
+  const { post: chatPost} = useBaseService(
+    "",
+    chatService,
+    false,
+  );
+  const { get: webHookGet } = useBaseService("", webHookService, false);
 
   const register = async (body: RegisterBody): Promise<RegisterResponse> => {
     return await post<RegisterResponse, RegisterBody>("signup", body);
@@ -143,5 +157,16 @@ export const useAuthService = () => {
     });
   };
 
-  return { register, login, getBusinessDetails, updateBusinessDetails, webChat };
+  const getAllBusinesses = async (): Promise<GetAllBusinessesResponse> => {
+    return await webHookGet<GetAllBusinessesResponse>("get-all-business");
+  };
+
+  return {
+    register,
+    login,
+    getBusinessDetails,
+    updateBusinessDetails,
+    webChat,
+    getAllBusinesses,
+  };
 };

@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Send, User, Bot, Search, X } from "lucide-react";
+import { Send, User, Bot } from "lucide-react";
 import { useAuthService } from "@/services/authService";
 import {
   Dialog,
@@ -14,7 +14,6 @@ import {
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { InputBlock } from "@/components/shared/TextInput";
-import { Button } from "@/components/ui/button";
 import { Button_v2 } from "@/components/shared/Button";
 
 interface Message {
@@ -31,9 +30,6 @@ export default function ChatbotPage() {
   const [isSending, setIsSending] = useState(false);
   const [sessionId, setSessionId] = useState<string>("");
   const [businessName, setBusinessName] = useState<string | null>(null);
-  const [conversationState, setConversationState] = useState<string | null>(
-    null,
-  );
   const [awaitingBusiness, setAwaitingBusiness] = useState(false);
   const [allBusinesses, setAllBusinesses] = useState<
     Array<{
@@ -186,7 +182,6 @@ export default function ChatbotPage() {
     // Clear all data and start fresh session
     setMessages([]);
     setBusinessName(null);
-    setConversationState(null);
     setIsBusinessModalOpen(false);
     setSearchQuery("");
     const newSession = crypto.randomUUID();
@@ -224,9 +219,9 @@ export default function ChatbotPage() {
       }
 
       // Update conversation state
-      if (response.state) {
-        setConversationState(response.state);
-      }
+      // if (response.state) {
+      //   setConversationState(response.state);
+      // }
 
       // Update business name if provided
       if (response.business_name) {
@@ -305,9 +300,9 @@ export default function ChatbotPage() {
       }
 
       // Update conversation state
-      if (response.state) {
-        setConversationState(response.state);
-      }
+      // if (response.state) {
+      //   setConversationState(response.state);
+      // }
 
       // Update business name if provided
       if (response.business_name) {

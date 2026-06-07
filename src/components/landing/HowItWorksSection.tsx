@@ -1,90 +1,34 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import { ArrowRight, UserPlus, ClipboardList, MessagesSquare } from "lucide-react";
 
 const steps = [
   {
     number: 1,
-    title: "Register",
-    description: "Sign up and connect your business in a few simple steps",
-    icon: (
-      <div className="w-20 h-20 rounded-full bg-[#7DD3C0]">
-        <svg
-          className="w-full h-full p-5 text-white"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-          />
-        </svg>
-      </div>
-    ),
+    title: "Create your account",
+    description: "Sign up and connect your business in a few simple steps.",
+    icon: UserPlus,
   },
   {
     number: 2,
-    title: "Complete Set Up",
+    title: "Add your details",
     description:
-      "Provide your business information so the AI Can answer customers correctly",
-    icon: (
-      <div className="w-20 h-20 rounded-full bg-[#7DD3C0] flex items-center justify-center">
-        <svg
-          className="w-10 h-10 text-white"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
-          />
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-          />
-        </svg>
-      </div>
-    ),
+      "Tell AlatChat AI about your business so it can answer customers accurately.",
+    icon: ClipboardList,
   },
   {
     number: 3,
-    title: "Utilize App",
+    title: "Let it run",
     description:
-      "Customers Chat you on Whatsapp while Alat Chat Ai responds automatically",
-    icon: (
-      <div className="w-20 h-20 rounded-full bg-[#7DD3C0] flex items-center justify-center">
-        <svg
-          className="w-10 h-10 text-white"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"
-          />
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M9 12l2 2 4-4"
-          />
-        </svg>
-      </div>
-    ),
+      "Customers message you on WhatsApp while AlatChat AI replies automatically.",
+    icon: MessagesSquare,
   },
-];
+] as const;
+
+const ease = [0.16, 1, 0.3, 1] as const;
 
 const container = {
   hidden: { opacity: 0 },
@@ -98,95 +42,95 @@ const container = {
 };
 
 const item = {
-  hidden: { opacity: 0, y: 50, scale: 0.9 },
+  hidden: { opacity: 0, y: 32 },
   show: {
     opacity: 1,
     y: 0,
-    scale: 1,
     transition: {
       type: "spring" as const,
-      stiffness: 100,
-      damping: 20,
-      duration: 0.8,
+      stiffness: 90,
+      damping: 18,
     },
   },
 };
 
 export function HowItWorksSection() {
+  const router = useRouter();
+
   return (
-    <section className="py-20 bg-white">
-      <div className="container mx-auto px-4">
-        <motion.h2
-          initial={{ opacity: 0, y: 30 }}
+    <section className="bg-white py-20 md:py-28">
+      <div className="container mx-auto px-5 md:px-8 lg:px-12">
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          className="text-4xl md:text-5xl font-bold text-center mb-20 text-gray-900"
+          transition={{ duration: 0.7, ease }}
+          className="mx-auto max-w-2xl text-center"
         >
-          HOW IT WORKS
-        </motion.h2>
+          <span className="text-sm font-semibold uppercase tracking-[0.18em] text-brand-ink">
+            How it works
+          </span>
+          <h2 className="mt-4 text-3xl font-extrabold tracking-tight text-ink sm:text-4xl md:text-[2.75rem] md:leading-[1.1]">
+            Up and running in three steps
+          </h2>
+          <p className="mt-4 text-lg text-ink-soft">
+            No technical setup, no new app for your customers. You could be
+            live before lunch.
+          </p>
+        </motion.div>
+
         <motion.div
           variants={container}
           initial="hidden"
           whileInView="show"
-          viewport={{ once: true, margin: "-100px" }}
-          className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto"
+          viewport={{ once: true, margin: "-80px" }}
+          className="relative mx-auto mt-16 grid max-w-5xl grid-cols-1 gap-12 md:grid-cols-3 md:gap-8"
         >
-          {steps.map((step, index) => (
-            <motion.div key={step.number} variants={item} className="relative">
-              <div className="flex flex-col items-center text-center">
-                <motion.div
-                  className="w-8 h-8 rounded-full bg-[#7DD3C0] flex items-center justify-center mb-8 font-bold text-gray-900"
-                  whileHover={{ scale: 1.1 }}
-                  transition={{ type: "spring", stiffness: 400, damping: 15 }}
-                >
+          {/* Connector — sits at the vertical center of the medallions, behind them */}
+          <div
+            aria-hidden
+            className="absolute left-[16.66%] right-[16.66%] top-10 z-0 hidden h-px border-t-2 border-dotted border-ink/15 md:block"
+          />
+
+          {steps.map((step) => (
+            <motion.div
+              key={step.number}
+              variants={item}
+              className="relative z-10 flex flex-col items-center text-center"
+            >
+              <motion.div
+                className="relative mb-7"
+                whileHover={{ y: -4 }}
+                transition={{ type: "spring", stiffness: 300, damping: 20 }}
+              >
+                <div className="flex size-20 items-center justify-center rounded-full bg-brand-soft text-brand-ink ring-8 ring-white">
+                  <step.icon className="size-8" strokeWidth={1.75} />
+                </div>
+                <span className="absolute -right-1 -top-1 flex size-7 items-center justify-center rounded-full border-2 border-white bg-brand text-sm font-bold text-ink">
                   {step.number}
-                </motion.div>
-                <motion.div
-                  className="w-32 h-32 rounded-full bg-white shadow-lg flex items-center justify-center mb-6 border-4 border-gray-100"
-                  whileHover={{
-                    scale: 1.05,
-                    rotate: 5,
-                    transition: { type: "spring", stiffness: 300, damping: 20 },
-                  }}
-                >
-                  {step.icon}
-                </motion.div>
-                <h3 className="text-2xl font-bold mb-4 text-gray-900">
-                  {step.title}
-                </h3>
-                <p className="text-gray-600">{step.description}</p>
-              </div>
-              {/* Dotted Line Connector */}
-              {index < steps.length - 1 && (
-                <div className="hidden md:block absolute top-4 left-1/2 w-full h-0.5 border-t-2 border-dotted border-gray-300"></div>
-              )}
+                </span>
+              </motion.div>
+              <h3 className="text-xl font-bold text-ink">{step.title}</h3>
+              <p className="mt-3 max-w-xs text-ink-soft">{step.description}</p>
             </motion.div>
           ))}
         </motion.div>
+
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-50px" }}
-          transition={{
-            duration: 0.8,
-            delay: 0.3,
-            ease: [0.16, 1, 0.3, 1],
-          }}
-          className="text-center mt-16"
+          transition={{ duration: 0.7, delay: 0.2, ease }}
+          className="mt-16 text-center"
         >
-          <motion.div
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            transition={{ type: "spring", stiffness: 400, damping: 25 }}
+          <Button
+            size="lg"
+            onClick={() => router.push("/main")}
+            className="group h-12 rounded-full bg-brand px-7 text-base font-semibold text-ink shadow-sm transition-all duration-300 hover:bg-brand-hover hover:shadow-md"
           >
-            <Button
-              size="lg"
-              className="bg-[#7DD3C0] hover:bg-[#6BC2AF] text-gray-900 font-semibold px-8 py-6 text-lg rounded-lg shadow-lg hover:shadow-xl transition-all duration-300"
-            >
-              Get Started
-            </Button>
-          </motion.div>
+            Get started — it&apos;s free
+            <ArrowRight className="size-4 transition-transform duration-300 group-hover:translate-x-0.5" />
+          </Button>
         </motion.div>
       </div>
     </section>

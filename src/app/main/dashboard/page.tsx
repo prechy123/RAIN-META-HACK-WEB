@@ -1,282 +1,170 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import AnimatedText from "@/components/AnimatedText";
-import { Button_v2 } from "@/components/shared/Button";
-import { Business } from "@/services/authService";
-import Particles from "@/components/Particles";
-// import MultilayerCardV_3 from "@/components/shared/CardLayer3";
-import { motion } from "framer-motion";
-// import { showErrorToast } from "@/libs/utils/showToast";
+import { useMemo } from "react";
+import { Copy, MessageCircleQuestion, Boxes, Clock, Bot, MailWarning } from "lucide-react";
+import { useBusiness } from "@/providers/BusinessProvider";
+import { parseHours, DAYS } from "@/components/onboarding/types";
+import clipboard from "@/libs/utils/clipboard";
 
-export default function Dashboard() {
-  const router = useRouter();
-  const [businessData, setBusinessData] = useState<Business | null>(null);
+function timeToMinutes(value: string): number | null {
+  const match = value.trim().match(/^(\d{1,2}):(\d{2})\s*(AM|PM)$/i);
+  if (!match) return null;
+  let hour = parseInt(match[1], 10) % 12;
+  if (/pm/i.test(match[3])) hour += 12;
+  return hour * 60 + parseInt(match[2], 10);
+}
 
-  useEffect(() => {
-    // Get business data from localStorage or session
-    const storedData = localStorage.getItem("businessData");
-    if (storedData) {
-      setBusinessData(JSON.parse(storedData));
-    } else {
-      // If no data, redirect to sign in
-      router.push("/main/signin");
-    }
-  }, [router]);
+export default function DashboardOverview() {
+  const { business } = useBusiness();
 
-  if (!businessData) {
-    return (
-      <div className="relative flex items-center justify-center h-screen bg-black">
-        <Particles
-          className="absolute inset-0 z-0"
-          particleColors={["#ffffff", "#ffffff"]}
-          particleCount={400}
-          particleSpread={10}
-          speed={0.1}
-          particleBaseSize={100}
-          moveParticlesOnHover={true}
-          alphaParticles={false}
-          disableRotation={false}
-        />
-        <div className="relative z-10">
-          <p className=" text-xl">Loading...</p>
-        </div>
-      </div>
-    );
-  }
+  const profileCompletion = useMemo(() => {
+    const checks = [
+      business.businessName,
+      business.businessDescription,
+      business.businessCategory,
+      business.businessAddress,
+      business.businessPhone,
+      business.businessEmailAddress,
+      business.businessWebsite,
+      business.businessOpenHours,
+      business.extra_information,
+      business.faqs?.length ? "y" : "",
+      business.items?.length ? "y" : "",
+    ];
+    const filled = checks.filter((c) => c && String(c).trim()).length;
+    return Math.round((filled / checks.length) * 100);
+  }, [business]);
+
+  const todayHours = useMemo(() => {
+    const hours = parseHours(business.businessOpenDays, business.businessOpenHours);
+    const today = DAYS[new Date().getDay()];
+    const dh = hours[today];
+    if (!dh?.open) return { label: "Closed", status: "Closed today" };
+    const now = new Date().getHours() * 60 + new Date().getMinutes();
+    const from = timeToMinutes(dh.from);
+    const to = timeToMinutes(dh.to);
+    const open = from !== null && to !== null && now >= from && now <= to;
+    return {
+      label: `${dh.from} - ${dh.to}`,
+      status: open ? "Currently Open" : "Closed now",
+    };
+  }, [business]);
 
   return (
-    <div className="relative min-h-screen mt-20">
-      {/* Particles Background - Fixed positioning */}
-
-
-      {/* Content */}
-      <div className="relative z-10 p-4 sm:p-8 max-w-7xl mx-auto ">
-        {/* Header */}
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8 pt-4">
-          <AnimatedText
-            text="Business Dashboard"
-            className="text-3xl sm:text-4xl "
-            delay={100}
-            duration={0.6}
-          />
-          <div className="flex gap-2">
-            <Button_v2
-              className="whitespace-nowrap"
-              onClick={() => router.push(`/main/dashboard/edit/${businessData.business_id}`)}
-            >
-              Edit
-            </Button_v2>
-            <Button_v2
-              className="whitespace-nowrap bg-red-600 hover:bg-red-700"
-              onClick={() => {
-                localStorage.removeItem("businessData");
-                router.push("/main/signin");
-              }}
-            >
-              Logout
-            </Button_v2>
-          </div>
-        </div>
-
-        {/* Business Overview */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.1 }}
-          className="mb-6"
-        >
-          {/* <MultilayerCardV_3> */}
-          <div className="p-4 sm:p-6">
-            <h2 className="text-xl sm:text-2xl font-bold  mb-4">
-              Business Overview
-            </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <p className="text-gray-400 text-sm">Business ID</p>
-                <p className=" font-semibold break-words">
-                  {businessData.business_id}
-                </p>
-              </div>
-              <div>
-                <p className="text-gray-400 text-sm">Email</p>
-                <p className=" font-semibold break-words">
-                  {businessData.email}
-                </p>
-              </div>
-              <div>
-                <p className="text-gray-400 text-sm">Business Name</p>
-                <p className=" font-semibold break-words">
-                  {businessData.businessName}
-                </p>
-              </div>
-              <div>
-                <p className="text-gray-400 text-sm">Category</p>
-                <p className=" font-semibold break-words">
-                  {businessData.businessCategory}
-                </p>
-              </div>
-            </div>
-          </div>
-          {/* </MultilayerCardV_3> */}
-        </motion.div>
-
-        {/* Business Details */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className="mb-6"
-        >
-          <div className="p-4 sm:p-6">
-            <h2 className="text-xl sm:text-2xl font-bold  mb-4">
-              Business Details
-            </h2>
-            <div className="space-y-4">
-              <div>
-                <p className="text-gray-400 text-sm">Description</p>
-                <p className=" break-words">
-                  {businessData.businessDescription}
-                </p>
-              </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <p className="text-gray-400 text-sm">Address</p>
-                  <p className=" break-words">
-                    {businessData.businessAddress}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-gray-400 text-sm">Phone</p>
-                  <p className=" break-words">
-                    {businessData.businessPhone}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-gray-400 text-sm">Business Email</p>
-                  <p className=" break-words">
-                    {businessData.businessEmailAddress}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-gray-400 text-sm">Website</p>
-                  <p className=" break-words">
-                    {businessData.businessWebsite || "N/A"}
-                  </p>
-                </div>
-              </div>
-              <div>
-                <p className="text-gray-400 text-sm">Open Hours</p>
-                <p className=" break-words">
-                  {businessData.businessOpenHours}
-                </p>
-              </div>
-              <div>
-                <p className="text-gray-400 text-sm">Open Days</p>
-                <p className=" break-words">
-                  {businessData.businessOpenDays}
-                </p>
-              </div>
-              {businessData.extra_information && (
-                <div>
-                  <p className="text-gray-400 text-sm">Extra Information</p>
-                  <p className=" break-words">
-                    {businessData.extra_information}
-                  </p>
-                </div>
-              )}
-            </div>
-          </div>
-        </motion.div>
-
-        {/* Business Picture */}
-        {/* {businessData.businessPicture && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-            className="mb-6"
+    <div className="space-y-6 px-1 sm:px-2">
+      {/* WhatsApp number */}
+      <div className="flex flex-wrap items-center gap-2 text-sm text-ink-soft">
+        <span>Your whatsapp business number</span>
+        <span className="font-semibold text-ink">
+          {business.businessPhone || "—"}
+        </span>
+        {business.businessPhone && (
+          <button
+            type="button"
+            onClick={() => clipboard(business.businessPhone)}
+            aria-label="Copy number"
+            className="text-ink-soft hover:text-ink"
           >
-            <div className="p-4 sm:p-6">
-              <h2 className="text-xl sm:text-2xl font-bold  mb-4">
-                Business Picture
-              </h2>
-              <img
-                src={businessData.businessPicture}
-                alt={businessData.businessName}
-                className="rounded-lg max-w-full w-full sm:max-w-md"
-              />
-            </div>
-          </motion.div>
-        )} */}
-
-        {/* FAQs */}
-        {businessData.faqs && businessData.faqs.length > 0 && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.4 }}
-            className="mb-6"
-          >
-            <div className="p-4 sm:p-6">
-              <h2 className="text-xl sm:text-2xl font-bold  mb-4">
-                FAQs
-              </h2>
-              <div className="space-y-4">
-                {businessData.faqs.map((faq, index) => (
-                  <div key={index} className="py-2">
-                    <div className=" rounded-lg p-4 border border-gray-700  transition-colors">
-                      <p className="font-bold text-lg mb-2 break-words">
-                        Q: {faq.question}
-                      </p>
-                      <p className=" break-words leading-relaxed">
-                        A: {faq.answer}
-                      </p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </motion.div>
-        )}
-
-        {/* Items/Menu */}
-        {businessData.items && businessData.items.length > 0 && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.5 }}
-            className="mb-6 pb-8"
-          >
-            <div className="p-4 sm:p-6">
-              <h2 className="text-xl sm:text-2xl font-bold  mb-4">
-                Menu Items
-              </h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {businessData.items.map((item, index) => (
-                  <div
-                    key={index}
-                    className="rounded-lg p-4 border border-gray-700 transition-colors"
-                  >
-                    <h3 className=" font-bold text-lg mb-2 break-words">
-                      {item.name}
-                    </h3>
-                    <p className=" font-semibold mb-2">
-                      ₦ {item.price}
-                    </p>
-                    {item.description && (
-                      <p className=" text-sm break-words">
-                        {item.description}
-                      </p>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </div>
-          </motion.div>
+            <Copy className="size-4" />
+          </button>
         )}
       </div>
+
+      <div>
+        <h2 className="mb-4 text-lg font-bold text-ink">Business Overview</h2>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {/* Profile completion (tall) */}
+          <div className="rounded-2xl border border-ink/10 bg-white p-5 lg:row-span-2">
+            <p className="text-3xl font-bold text-ink">{profileCompletion}%</p>
+            <p className="mt-1 font-medium text-ink">Profile Completion</p>
+            <div className="mt-3 h-2 w-full overflow-hidden rounded-full bg-ink/10">
+              <div
+                className="h-full rounded-full bg-brand transition-all"
+                style={{ width: `${profileCompletion}%` }}
+              />
+            </div>
+            <p className="mt-3 text-sm text-ink-soft">
+              Complete your profile for better AI responses
+            </p>
+          </div>
+
+          <StatCard
+            icon={MessageCircleQuestion}
+            value={`${business.faqs?.length ?? 0}`}
+            unit="questions"
+            title="Active FAQs"
+            subtitle="Helping AI answer common queries"
+          />
+          <StatCard
+            icon={Boxes}
+            value={`${business.items?.length ?? 0}`}
+            unit="items"
+            title="Products and Services"
+            subtitle="Available for customers to inquire about"
+          />
+          <StatCard
+            icon={Clock}
+            value={todayHours.label}
+            title="Today's Business Hour"
+            subtitle={todayHours.status}
+          />
+          <StatCard
+            icon={Bot}
+            value="0"
+            unit="responses"
+            title="AI Messages Handled"
+            subtitle="Messages AI handled"
+          />
+          <StatCard
+            icon={MailWarning}
+            value="0"
+            unit="Need attention"
+            title="Pending messages"
+            subtitle="require manual response from you"
+          />
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <div className="rounded-2xl border border-ink/10 bg-white p-5">
+          <p className="font-semibold text-ink">Pending messages</p>
+          <div className="flex min-h-28 flex-col items-center justify-center text-center">
+            <p className="text-ink-soft">No pending messages</p>
+          </div>
+        </div>
+        <div className="rounded-2xl border border-ink/10 bg-white p-5">
+          <p className="font-semibold text-ink">AI suggestions</p>
+          <div className="flex min-h-28 flex-col items-center justify-center text-center">
+            <p className="text-ink-soft">No suggestions yet</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function StatCard({
+  icon: Icon,
+  value,
+  unit,
+  title,
+  subtitle,
+}: {
+  icon: React.ElementType;
+  value: string;
+  unit?: string;
+  title: string;
+  subtitle: string;
+}) {
+  return (
+    <div className="rounded-2xl border border-ink/10 bg-white p-5">
+      <Icon className="size-5 text-brand-ink" />
+      <p className="mt-2 text-xl font-bold text-ink">
+        {value}{" "}
+        {unit && <span className="text-sm font-normal text-ink-soft">{unit}</span>}
+      </p>
+      <p className="mt-1 font-medium text-ink">{title}</p>
+      <p className="mt-1 text-sm text-ink-soft">{subtitle}</p>
     </div>
   );
 }

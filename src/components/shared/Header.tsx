@@ -2,141 +2,137 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { motion, AnimatePresence } from "framer-motion";
+import {
+  motion,
+  AnimatePresence,
+  useScroll,
+  useMotionValueEvent,
+} from "framer-motion";
 import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
+import { cn } from "@/lib/utils";
 
 const navLinks = [
   { name: "Home", href: "/#" },
   { name: "Features", href: "#features" },
   { name: "How it works", href: "#how-it-works" },
-  { name: "Chat Bot", href: "/main/chatbot" },
+  { name: "Chat bot", href: "/main/chatbot" },
   { name: "Login", href: "/main/signin" },
 ];
+
+const ease = [0.16, 1, 0.3, 1] as const;
+
+function Wordmark() {
+  return (
+    <span className="text-xl font-extrabold tracking-tight">
+      <span className="text-ink">Alat</span>
+      <span className="text-brand-ink">Chat</span>
+      <span className="text-ink/40"> AI</span>
+    </span>
+  );
+}
 
 export function Header() {
   const router = useRouter();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
 
-  const toggleMobileMenu = () => {
-    setIsMobileMenuOpen(!isMobileMenuOpen);
-  };
+  const { scrollY } = useScroll();
+  useMotionValueEvent(scrollY, "change", (latest) => {
+    setScrolled(latest > 8);
+  });
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-white backdrop-blur-md border-b border-gray-200">
-      <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between h-20">
+    <header
+      className={cn(
+        "fixed inset-x-0 top-0 z-50 transition-all duration-300",
+        scrolled || isMobileMenuOpen
+          ? "border-b border-ink/[0.07] bg-white/80 backdrop-blur-md shadow-[0_1px_20px_-12px_rgba(30,34,41,0.5)]"
+          : "border-b border-transparent bg-transparent"
+      )}
+    >
+      <div className="container mx-auto px-5 md:px-8 lg:px-12">
+        <div className="flex h-20 items-center justify-between">
           {/* Logo */}
           <motion.div
-            initial={{ opacity: 0, x: -30 }}
+            initial={{ opacity: 0, x: -24 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.6, ease }}
           >
-            <Link href="/" className="inline-block">
-              <motion.div
-                className="w-12 h-12  flex items-center justify-center transition-colors"
-                whileHover={{
-                  backgroundColor: "#d1d5db",
-                  transition: { duration: 0.2 },
-                }}
-              >
-                <img
-                  src="/logo2.jpeg"
-                  alt="Rain Logo"
-                  className="w-full h-full object-contain rounded-lg"
-                />
-              </motion.div>
+            <Link href="/" className="inline-flex items-center" aria-label="AlatChat AI home">
+              <Wordmark />
             </Link>
           </motion.div>
 
           {/* Desktop Navigation */}
           <motion.nav
-            initial={{ opacity: 0, y: -20 }}
+            initial={{ opacity: 0, y: -16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-            className="hidden lg:flex items-center space-x-8"
+            transition={{ duration: 0.6, delay: 0.1, ease }}
+            className="hidden items-center gap-9 lg:flex"
           >
-            {navLinks.map((link, index) => (
-              <motion.div
+            {navLinks.map((link) => (
+              <Link
                 key={link.name}
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{
-                  duration: 0.5,
-                  delay: 0.1 + index * 0.04,
-                  ease: [0.16, 1, 0.3, 1],
-                }}
+                href={link.href}
+                className="group relative text-[15px] font-medium text-ink-soft transition-colors hover:text-ink"
               >
-                <Link
-                  href={link.href}
-                  className="text-gray-700 hover:text-[#7DD3C0] transition-colors font-medium relative group"
-                >
-                  {link.name}
-                  <motion.span
-                    className="absolute -bottom-1 left-0 h-0.5 bg-[#7DD3C0]"
-                    initial={{ width: 0 }}
-                    whileHover={{ width: "100%" }}
-                    transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-                  ></motion.span>
-                </Link>
-              </motion.div>
+                {link.name}
+                <span className="absolute -bottom-1.5 left-0 h-0.5 w-0 rounded-full bg-brand transition-all duration-300 ease-out group-hover:w-full" />
+              </Link>
             ))}
           </motion.nav>
 
-          {/* Desktop CTA Button */}
+          {/* Desktop CTA */}
           <motion.div
-            initial={{ opacity: 0, x: 30 }}
+            initial={{ opacity: 0, x: 24 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.6, delay: 0.2, ease }}
             className="hidden lg:block"
           >
-            <motion.div
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              transition={{ type: "spring", stiffness: 400, damping: 25 }}
+            <Button
+              onClick={() => router.push("/main")}
+              className="h-10 rounded-full bg-brand px-5 font-semibold text-ink shadow-sm transition-all duration-300 hover:bg-brand-hover hover:shadow-md"
             >
-              <Button
-                size="lg"
-                className="bg-[#7DD3C0] hover:bg-[#6BC2AF]  font-semibold px-6 py-2 rounded-full shadow-md hover:shadow-lg transition-all duration-300"
-                onClick={() => router.push("/main")}
-              >
-                Get Started
-              </Button>
-            </motion.div>
+              Get started
+            </Button>
           </motion.div>
 
           {/* Mobile Menu Button */}
           <motion.button
-            initial={{ opacity: 0, x: 30 }}
+            initial={{ opacity: 0, x: 24 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-            onClick={toggleMobileMenu}
-            className="lg:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors"
+            transition={{ duration: 0.6, ease }}
+            onClick={() => setIsMobileMenuOpen((v) => !v)}
+            className="rounded-lg p-2 text-ink transition-colors hover:bg-ink/5 lg:hidden"
             aria-label="Toggle menu"
+            aria-expanded={isMobileMenuOpen}
             whileTap={{ scale: 0.95 }}
           >
-            <AnimatePresence mode="wait">
+            <AnimatePresence mode="wait" initial={false}>
               {isMobileMenuOpen ? (
-                <motion.div
+                <motion.span
                   key="close"
                   initial={{ rotate: -90, opacity: 0 }}
                   animate={{ rotate: 0, opacity: 1 }}
                   exit={{ rotate: 90, opacity: 0 }}
                   transition={{ duration: 0.2 }}
+                  className="block"
                 >
-                  <X className="w-6 h-6 text-gray-700" />
-                </motion.div>
+                  <X className="size-6" />
+                </motion.span>
               ) : (
-                <motion.div
+                <motion.span
                   key="menu"
                   initial={{ rotate: 90, opacity: 0 }}
                   animate={{ rotate: 0, opacity: 1 }}
                   exit={{ rotate: -90, opacity: 0 }}
                   transition={{ duration: 0.2 }}
+                  className="block"
                 >
-                  <Menu className="w-6 h-6 text-gray-700" />
-                </motion.div>
+                  <Menu className="size-6" />
+                </motion.span>
               )}
             </AnimatePresence>
           </motion.button>
@@ -150,50 +146,42 @@ export function Header() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            transition={{
-              duration: 0.3,
-              ease: [0.16, 1, 0.3, 1],
-            }}
-            className="lg:hidden border-t border-gray-200 bg-white/95 backdrop-blur-md"
+            transition={{ duration: 0.3, ease }}
+            className="overflow-hidden border-t border-ink/[0.07] bg-white/95 backdrop-blur-md lg:hidden"
           >
-            <nav className="container mx-auto px-4 py-6 flex flex-col space-y-4">
+            <nav className="container mx-auto flex flex-col gap-1 px-5 py-5">
               {navLinks.map((link, index) => (
                 <motion.div
                   key={link.name}
-                  initial={{ opacity: 0, x: -30 }}
+                  initial={{ opacity: 0, x: -24 }}
                   animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -30 }}
-                  transition={{
-                    duration: 0.3,
-                    delay: index * 0.05,
-                    ease: [0.16, 1, 0.3, 1],
-                  }}
+                  exit={{ opacity: 0, x: -24 }}
+                  transition={{ duration: 0.3, delay: index * 0.05, ease }}
                 >
                   <Link
                     href={link.href}
                     onClick={() => setIsMobileMenuOpen(false)}
-                    className="block py-2 px-4 text-gray-700 hover:text-[#7DD3C0] hover:bg-gray-50 rounded-lg transition-colors font-medium"
+                    className="block rounded-lg px-4 py-2.5 font-medium text-ink-soft transition-colors hover:bg-brand-soft hover:text-brand-ink"
                   >
                     {link.name}
                   </Link>
                 </motion.div>
               ))}
               <motion.div
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 20 }}
-                transition={{
-                  duration: 0.4,
-                  delay: navLinks.length * 0.05,
-                  ease: [0.16, 1, 0.3, 1],
-                }}
-                className="pt-4"
+                exit={{ opacity: 0, y: 16 }}
+                transition={{ duration: 0.4, delay: navLinks.length * 0.05, ease }}
+                className="px-1 pt-3"
               >
                 <Button
-                  size="lg"
-                  className="w-full bg-[#7DD3C0] hover:bg-[#6BC2AF] text-gray-900 font-semibold rounded-full shadow-md"
+                  onClick={() => {
+                    setIsMobileMenuOpen(false);
+                    router.push("/main");
+                  }}
+                  className="h-11 w-full rounded-full bg-brand font-semibold text-ink shadow-sm hover:bg-brand-hover"
                 >
-                  Get Started
+                  Get started
                 </Button>
               </motion.div>
             </nav>

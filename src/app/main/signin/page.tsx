@@ -1,14 +1,12 @@
 "use client";
 
-import { useState, useCallback, useMemo } from "react";
+import { useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import AnimatedText from "@/components/AnimatedText";
-import Particles from "@/components/Particles";
-
-import { Button_v2 } from "@/components/shared/Button";
-import { Input, InputBlock } from "@/components/shared/TextInput";
-import PasswordInput from "@/components/shared/PasswordInput";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import AuthShell from "@/components/auth/AuthShell";
+import PasswordField from "@/components/auth/PasswordField";
 import { useAuthService } from "@/services/authService";
 
 export default function SignIn() {
@@ -25,11 +23,7 @@ export default function SignIn() {
 
     try {
       const response = await login({ email, password });
-
-      // Store business data in localStorage
       localStorage.setItem("businessData", JSON.stringify(response.business));
-
-      // Redirect to dashboard
       router.push("/main/dashboard");
     } catch (err) {
       setError("Failed to sign in. Please try again.");
@@ -39,108 +33,77 @@ export default function SignIn() {
     }
   }, [email, password, login, router]);
 
-  // Memoize AnimatedText components to prevent re-renders
-  const animatedTitle = useMemo(
-    () => (
-      <AnimatedText
-        text="Welcome Back!"
-        className="text-4xl"
-        delay={100}
-        duration={0.6}
-      />
-    ),
-    [],
-  );
-
-  const animatedSubtitle = useMemo(
-    () => (
-      <AnimatedText
-        text="Sign in to view your business information"
-        className="text-lg animate-pulse text-[#7DD3C0]"
-        delay={100}
-        duration={0.6}
-      />
-    ),
-    [],
-  );
-
-  // Memoize Particles component to prevent re-renders
-  const particlesBackground = useMemo(
-    () => (
-      <Particles
-        className="z-10"
-        particleColors={["#ffffff", "#ffffff"]}
-        particleCount={400}
-        particleSpread={10}
-        speed={0.1}
-        particleBaseSize={100}
-        moveParticlesOnHover={true}
-        alphaParticles={false}
-        disableRotation={false}
-      />
-    ),
-    [],
-  );
-
   return (
-    <div className="relative flex items-center justify-center h-screen overflow-hidden z-10">
-      <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center z-20 flex-col">
-        <div className="h-auto w-full sm:w-[600px] drop-shadow-lg p-8 rounded-3xl">
-          {animatedTitle}
-          {animatedSubtitle}
+    <AuthShell panelHeadline="Your AI assistant is ready to help">
+      <div className="mx-auto w-full max-w-sm">
+        <h1 className="text-3xl font-bold text-ink">Log in</h1>
+        <p className="mt-1 text-sm text-ink-soft">Welcome back to AlatChat AI</p>
 
-          <div className="mt-8">
-            <div className="space-y-4">
-              <InputBlock variant="neubrutalism" size="lg">
-                <Input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Enter your email"
-                  disabled={isLoading}
-                />
-              </InputBlock>
-              <PasswordInput
-                value={password}
-                setValue={setPassword}
-                placeholder="Enter your password"
-                usingUseState={true}
-                // disabled={isLoading}
-              />
+        <form
+          className="mt-7 space-y-5"
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleSignIn();
+          }}
+        >
+          <div className="space-y-1.5">
+            <label htmlFor="email" className="text-sm font-medium text-ink">
+              Email
+            </label>
+            <Input
+              id="email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="enter your email"
+              disabled={isLoading}
+              className="h-12 rounded-xl border border-ink/15"
+            />
+          </div>
+
+          <div className="space-y-1.5">
+            <label htmlFor="password" className="text-sm font-medium text-ink">
+              Password
+            </label>
+            <PasswordField
+              id="password"
+              value={password}
+              onChange={setPassword}
+              placeholder="enter your Password"
+              disabled={isLoading}
+            />
+            <div className="text-right">
+              <Link
+                href="#"
+                className="text-sm font-medium text-brand-ink hover:underline"
+              >
+                Forgot password?
+              </Link>
             </div>
           </div>
 
           {error && (
-            <div className="mt-4 p-3 bg-red-500/10 border border-red-500 rounded-lg">
-              <p className="text-red-500 text-sm">{error}</p>
+            <div className="rounded-lg border border-red-300 bg-red-50 p-3">
+              <p className="text-sm text-red-600">{error}</p>
             </div>
           )}
 
-          <div className="mt-6 space-y-4">
-            <Button_v2
-              onClick={handleSignIn}
-              className="w-full"
-              // disabled={isLoading || !email || !password}
-            >
-              {isLoading ? "Signing In..." : "Sign In"}
-            </Button_v2>
+          <Button
+            type="submit"
+            disabled={isLoading}
+            className="h-12 w-full rounded-xl bg-brand text-base font-semibold text-ink hover:bg-brand-hover disabled:opacity-60"
+          >
+            {isLoading ? "Logging in..." : "Log in"}
+          </Button>
+        </form>
 
-            <div className="text-center">
-              <p className="text-sm text-gray-400">
-                Dont have an account?{" "}
-                <Link
-                  href="/main"
-                  className="text-[#7DD3C0]  underline"
-                >
-                  Register your business
-                </Link>
-              </p>
-            </div>
-          </div>
-        </div>
+        <p className="mt-6 text-center text-sm text-ink-soft">
+          Don&apos;t have an account yet?{" "}
+          <Link href="/main" className="font-semibold text-brand-ink">
+            Sign up
+          </Link>
+        </p>
       </div>
-
-      {particlesBackground}
-    </div>
+    </AuthShell>
   );
 }

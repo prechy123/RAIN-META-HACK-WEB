@@ -17,7 +17,7 @@ export interface RegisterBody {
   businessPicture: string;
   extra_information: string;
   faqs: FAQ[];
-  items: Item[];
+  items: RegisterItem[];
 }
 
 export interface FAQ {
@@ -28,6 +28,13 @@ export interface FAQ {
 export interface Item {
   name: string;
   price: number;
+  description?: string;
+}
+
+// The backend expects item prices as strings on the signup payload.
+export interface RegisterItem {
+  name: string;
+  price: string;
   description?: string;
 }
 
@@ -132,13 +139,21 @@ export const useAuthService = () => {
     message: string;
     business: Business;
   }> => {
+    // Backend expects item prices as strings (same as signup).
+    const payload: Record<string, unknown> = { ...body };
+    if (Array.isArray(body.items)) {
+      payload.items = body.items.map((item) => ({
+        ...item,
+        price: String(item.price),
+      }));
+    }
     return await put<
       {
         message: string;
         business: Business;
       },
-      Partial<Business>
-    >(`${business_id}`, body);
+      Record<string, unknown>
+    >(`${business_id}`, payload);
   };
 
   const webChat = async (
